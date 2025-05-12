@@ -9,7 +9,7 @@ export default function Navbar() {
       <div className="flex gap-6">
         <Link href="/" className="text-gray-200 hover:text-pink-400 font-medium transition-colors">Ana Sayfa</Link>
         <Link href="#oyunlar" className="text-gray-200 hover:text-pink-400 font-medium transition-colors">Oyunlar</Link>
-        <Link href="#hakkinda" className="text-gray-200 hover:text-pink-400 font-medium transition-colors">Hakkında</Link>
+        <Link href="/hakkinda" className="text-gray-200 hover:text-pink-400 font-medium transition-colors">Hakkında</Link>
       </div>
     </nav>
   );
