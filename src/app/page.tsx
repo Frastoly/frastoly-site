@@ -32,7 +32,7 @@ export default function Home() {
             <Image src="/game3.png" alt="Oyun 3" width={80} height={80} className="mb-4 rounded" />
             <h2 className="text-2xl font-semibold mb-2">Zeka Blokları</h2>
             <p className="text-gray-400 mb-4 text-center">Blokları doğru sırayla yerleştir, bölümleri geç!</p>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-bold">Oyna</button>
+            <a href="/zekabloklari/index.html" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-bold">Oyna</a>
           </div>
         </div>
       </div>
