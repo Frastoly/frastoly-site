@@ -1,0 +1,236 @@
+:root {
+    --bg-color: #1a1a1a;
+    --terminal-bg: #000000;
+    --text-color: #00ff00;
+    --secondary-color: #00cc00;
+    --accent-color: #0066ff;
+    --error-color: #ff0000;
+    --success-color: #00ff00;
+    --panel-bg: rgba(0, 0, 0, 0.8);
+    --button-bg: #333;
+    --button-hover: #444;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: 
+        linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url('../assets/background.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.game-container {
+    width: 90%;
+    max-width: 1200px;
+    height: 90vh;
+    display: flex;
+    gap: 20px;
+}
+
+.terminal {
+    flex: 2;
+    background-color: var(--terminal-bg);
+    border-radius: 5px;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--text-color);
+}
+
+.terminal-header {
+    background-color: #333;
+    padding: 10px;
+    border-radius: 5px 5px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--text-color);
+}
+
+.terminal-title {
+    color: #fff;
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.terminal-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.control {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.control:hover {
+    opacity: 0.8;
+}
+
+.minimize { background-color: #ffbd2e; }
+.maximize { background-color: #28c940; }
+.close { background-color: #ff5f56; }
+
+.terminal-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+#output {
+    margin-bottom: 20px;
+    white-space: pre-wrap;
+}
+
+.input-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.prompt {
+    color: var(--text-color);
+}
+
+#command-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    font-size: 1em;
+    outline: none;
+    padding: 5px;
+}
+
+#command-input::placeholder {
+    color: rgba(0, 255, 0, 0.5);
+}
+
+.game-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.mission-log, .player-stats, .quick-commands {
+    background-color: var(--panel-bg);
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+    border: 1px solid var(--text-color);
+}
+
+h3 {
+    color: var(--accent-color);
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--secondary-color);
+    padding-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.command-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.command-buttons button {
+    background-color: var(--button-bg);
+    color: var(--text-color);
+    border: 1px solid var(--text-color);
+    padding: 8px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    transition: all 0.3s ease;
+}
+
+.command-buttons button:hover {
+    background-color: var(--button-hover);
+    transform: translateY(-2px);
+}
+
+.current-mission {
+    background-color: rgba(0, 255, 0, 0.1);
+    padding: 10px;
+    border-radius: 3px;
+    margin-top: 10px;
+}
+
+.current-mission h4 {
+    color: var(--accent-color);
+    margin-bottom: 8px;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--terminal-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--secondary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-color);
+}
+
+/* Animations */
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.prompt::after {
+    content: '█';
+    animation: blink 1s infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .game-container {
+        flex-direction: column;
+        height: auto;
+    }
+    
+    .terminal, .game-panel {
+        width: 100%;
+    }
+    
+    .game-panel {
+        margin-top: 20px;
+    }
+} 

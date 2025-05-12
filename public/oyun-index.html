@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siber İz Sürücü</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="terminal">
+            <div class="terminal-header">
+                <div class="terminal-title">
+                    <span>siber_iz_surucu.exe</span>
+                </div>
+                <div class="terminal-controls">
+                    <div class="control minimize">-</div>
+                    <div class="control maximize">□</div>
+                    <div class="control close">×</div>
+                </div>
+            </div>
+            <div class="terminal-content">
+                <div id="output"></div>
+                <div class="input-line">
+                    <span class="prompt">></span>
+                    <input type="text" id="command-input" placeholder="Komut girin...">
+                </div>
+            </div>
+        </div>
+        
+        <div class="game-panel">
+            <div class="mission-log">
+                <h3>📋 Görev Günlüğü</h3>
+                <div id="current-mission" class="current-mission">
+                    <h4>Aktif Görev</h4>
+                    <p>Henüz görev seçilmedi.</p>
+                </div>
+            </div>
+            
+            <div class="player-stats">
+                <h3>👤 Oyuncu Bilgileri</h3>
+                <div id="player-info">
+                    <p>Seviye: <span id="player-level">1</span></p>
+                    <p>Deneyim: <span id="player-xp">0</span></p>
+                    <p>Para: <span id="player-money">0</span></p>
+                </div>
+                <div id="player-skills">
+                    <h4>Yetenekler</h4>
+                    <ul>
+                        <li>Hacking: <span id="hacking-skill">0</span></li>
+                        <li>Networking: <span id="networking-skill">0</span></li>
+                        <li>Cryptography: <span id="cryptography-skill">0</span></li>
+                        <li>Sosyal Mühendislik: <span id="social-skill">0</span></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="quick-commands">
+                <h3>⚡ Hızlı Komutlar</h3>
+                <div class="command-buttons">
+                    <button onclick="executeCommand('help')">help</button>
+                    <button onclick="executeCommand('skills')">skills</button>
+                    <button onclick="executeCommand('missions')">missions</button>
+                    <button onclick="executeCommand('clear')">clear</button>
+                    <button onclick="executeCommand('admin complete')">complete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/missions.js"></script>
+    <script src="js/terminal.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>

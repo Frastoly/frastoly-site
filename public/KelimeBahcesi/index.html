@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelime Bahçesi</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="mainMenu" class="container">
+        <h1>Kelime Bahçesi</h1>
+        <div class="menu-options">
+            <div class="menu-item" onclick="oyunModuSec('klasik')">
+                <h2>Klasik Mod</h2>
+                <p>Verilen harflerden anlamlı kelimeler bul. Her kelime için puan kazan!</p>
+            </div>
+            <div class="menu-item" onclick="oyunModuSec('zincir')">
+                <h2>Zincir Modu</h2>
+                <p>Son kelimenin son harfiyle başlayan yeni kelimeler bul. Zincir uzadıkça bonus puan kazan!</p>
+            </div>
+            <div class="menu-item" onclick="yarismaModuBaslat()">
+                <h2>Yarışma Modu</h2>
+                <p>Tanıma göre kelimeyi bul! Harf açtırabilir, doğrudan tahmin edebilirsin. Kısa kelimeden uzun kelimeye doğru ilerle.</p>
+            </div>
+        </div>
+        <div style="margin-top:32px; color:#2d545e; font-size:1em; font-weight:bold; opacity:0.85;">
+            Tüm kelimeler TDK'ye uygun olarak hazırlanmıştır
+        </div>
+    </div>
+
+    <div id="gameScreen" class="container" style="display: none;">
+        <h1>Kelime Bahçesi</h1>
+        <div id="garden">
+            <img id="flower" src="https://cdn.pixabay.com/photo/2013/07/12/13/58/flower-147193_1280.png" alt="🌸" width="120" onerror="this.onerror=null;this.src='https://em-content.zobj.net/source/microsoft-teams/337/cherry-blossom_1f338.png';">
+        </div>
+        <div class="stats">
+            <div id="score">Puan: 0</div>
+            <div id="zorlukBilgisi">Zorluk: ORTA</div>
+            <div id="zincirBilgisi"></div>
+        </div>
+        <div class="mod-secici">
+            <button id="menuBtn" onclick="anaMenuyeDon()" class="mod-btn">Ana Menü</button>
+        </div>
+        <div class="zorluk-secici">
+            <button onclick="zorlukDegistir('kolay')" class="zorluk-btn">Kolay</button>
+            <button onclick="zorlukDegistir('orta')" class="zorluk-btn">Orta</button>
+            <button onclick="zorlukDegistir('zor')" class="zorluk-btn">Zor</button>
+        </div>
+        <div id="letters"></div>
+        <button id="hintBtn">İpucu</button>
+        <button id="restartBtn">Yeni Oyun</button>
+        <input type="text" id="wordInput" placeholder="Kelimeyi yaz veya harflere tıkla">
+        <button id="submitBtn">Gönder</button>
+        <div id="message"></div>
+    </div>
+
+    <div id="quizScreen" class="container" style="display:none;">
+        <h1>Yarışma Modu</h1>
+        <div id="quizQuestion" style="font-size:1.2em; margin-bottom:20px;"></div>
+        <div id="quizLetters" style="margin-bottom:20px;"></div>
+        <div id="quizControls">
+            <button id="quizRevealBtn">Harf Aç</button>
+            <input type="text" id="quizGuessInput" placeholder="Tahminini yaz">
+            <button id="quizGuessBtn">Tahmin Et</button>
+        </div>
+        <div id="quizInfo" style="margin-top:15px; color:#2d545e; font-weight:bold;"></div>
+        <div id="quizScore" style="margin-top:10px;"></div>
+        <div id="quizTimer" style="margin-top:10px;"></div>
+        <button id="quizMenuBtn" style="margin-top:20px;">Ana Menü</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
