@@ -31,7 +31,18 @@ class Game {
                 globalChaosLevel: 0,
                 corporateTrust: 50,
                 cyberThreatLevel: 1
-            }
+            },
+            // Yeni Hikaye Metrikleri
+            metrics: {
+                intel_score: 0,
+                public_trust: 0,
+                exposure_risk: 0,
+                timing_pressure: 0
+            },
+            // Bayrak Sistemi (Oyun içi anahtarlar)
+            flags: [],
+            // Karar Geçmişi (D0-D4)
+            storyDecisions: []
         };
 
         this.missions = new Missions();
@@ -42,8 +53,8 @@ class Game {
             speed: 1
         };
         
-        // İlk görevi başlat
-        this.startMission('ghost_protocol_intro');
+        // İlk bölümü başlat
+        this.startMission('chapter_1');
     }
 
     startMission(missionId) {
@@ -59,23 +70,32 @@ class Game {
         this.player.completedSteps = [];
         
         // Görev başlangıç mesajını göster
-        this.terminal.write('\n🎯 Yeni Görev Başladı!', 'success');
-        this.terminal.write('-------------------', 'info');
-        this.terminal.write(`Görev: ${mission.title}`, 'info');
-        this.terminal.write(mission.description, 'info');
-        this.terminal.write(`\nHedef: ${mission.target}`, 'info');
-        this.terminal.write(`Açıklama: ${mission.targetDescription}`, 'info');
+        this.terminal.write('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
+        this.terminal.write('🎯 YENİ BÖLÜM BAŞLADI!', 'success');
+        this.terminal.write('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
+        this.terminal.write(`\n${mission.title}`, 'mission');
+        
+        // Hikaye metnini göster
+        if (mission.story) {
+            this.terminal.write(`\n📖 Hikaye:`, 'info');
+            this.terminal.write(mission.story, 'info');
+        }
         
         // Briefing mesajını göster
         if (mission.briefing) {
-            this.terminal.write('\n📋 Görev Brifingi:', 'info');
+            this.terminal.write('\n📋 Görev Brifingi:', 'warning');
             this.terminal.write(mission.briefing, 'info');
         }
         
-        this.terminal.write('\nGörev Adımları:', 'info');
-        mission.steps.forEach(step => {
-            this.terminal.write(`[ ] ${step}`, 'info');
+        this.terminal.write(`\n🎯 Hedef: ${mission.target}`, 'info');
+        this.terminal.write(`📄 Açıklama: ${mission.targetDescription}`, 'info');
+        
+        this.terminal.write('\n✅ Görev Adımları:', 'info');
+        mission.steps.forEach((step, index) => {
+            this.terminal.write(`  ${index + 1}. [ ] ${step}`, 'info');
         });
+        
+        this.terminal.write('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n', 'info');
     }
 
     completeMission(missionId) {
@@ -92,40 +112,52 @@ class Game {
             this.player.xp += mission.reward.xp || 0;
             this.player.money += mission.reward.money || 0;
             this.player.reputation += mission.reward.reputation || 0;
-        } else {
-            // Alternatif ödül anahtarları
-            this.player.xp += mission.experience || 0;
-            if (mission.skillRewards) {
-                Object.entries(mission.skillRewards).forEach(([skill, value]) => {
-                    if (this.player.skills[skill] !== undefined) {
-                        this.player.skills[skill] += value;
-                    }
-                });
-            }
         }
 
         // Tamamlanma mesajını göster
-        this.terminal.write('\n🎉 Görev Tamamlandı!', 'success');
-        this.terminal.write('-------------------', 'info');
-        this.terminal.write(`Görev: ${mission.title}`, 'info');
-        this.terminal.write(`Kazanılan XP: ${mission.reward ? mission.reward.xp : mission.experience || 0}`, 'info');
-        this.terminal.write(`Kazanılan Para: $${mission.reward ? mission.reward.money : 0}`, 'info');
-        this.terminal.write(`Kazanılan İtibar: ${mission.reward ? mission.reward.reputation : 0}`, 'info');
+        this.terminal.write('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'success');
+        this.terminal.write('🎉 BÖLÜM TAMAMLANDI!', 'success');
+        this.terminal.write('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'success');
+        this.terminal.write(`\n${mission.title}`, 'mission');
+        this.terminal.write(`\n💫 Kazanılan XP: ${mission.reward ? mission.reward.xp : 0}`, 'success');
+        this.terminal.write(`💰 Kazanılan Para: $${mission.reward ? mission.reward.money : 0}`, 'success');
+        this.terminal.write(`⭐ Kazanılan İtibar: ${mission.reward ? mission.reward.reputation : 0}`, 'success');
 
         // Debriefing mesajını göster
         if (mission.debriefing) {
-            this.terminal.write('\n📋 Görev Değerlendirmesi:', 'info');
+            this.terminal.write('\n📋 Görev Değerlendirmesi:', 'warning');
             this.terminal.write(mission.debriefing, 'info');
         }
+
+        // Mevcut metrikleri göster
+        this.terminal.write('\n📊 Mevcut Metrikler:', 'info');
+        this.terminal.write(`🧠 İstihbarat Skoru: ${this.player.metrics.intel_score}`, 'info');
+        this.terminal.write(`🤝 Kamu Güveni: ${this.player.metrics.public_trust}`, 'info');
+        this.terminal.write(`⚠️ İfşa Riski: ${this.player.metrics.exposure_risk}`, 'info');
+        this.terminal.write(`⏱️ Zaman Baskısı: ${this.player.metrics.timing_pressure}`, 'info');
 
         // Görevi tamamlandı olarak işaretle
         this.player.currentMission = null;
 
-        // Bir sonraki görevi başlat
-        const nextMission = this.missions.getNextMission(missionId);
-        if (nextMission) {
-            this.terminal.write('\nSistem yükseltme seçeneklerini görmek için: system', 'info');
-            setTimeout(() => this.startMission(nextMission.id), 3000);
+        // Karar noktası varsa göster
+        if (mission.hasDecision && mission.decisionId) {
+            this.terminal.write('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'warning');
+            setTimeout(() => {
+                this.showDecision(mission.decisionId);
+            }, 2000);
+        } else {
+            // Final bölüm mü kontrol et
+            if (mission.isFinal) {
+                setTimeout(() => {
+                    this.showEnding();
+                }, 2000);
+            } else {
+                // Bir sonraki bölümü başlat
+                const nextMission = this.missions.getNextMission(missionId);
+                if (nextMission) {
+                    setTimeout(() => this.startMission(nextMission.id), 3000);
+                }
+            }
         }
     }
 
@@ -349,7 +381,166 @@ class Game {
         this.updatePlayerInfo();
     }
 
+    // Karar noktası gösterimi
+    showDecision(decisionId) {
+        const decision = this.missions.getDecision(decisionId);
+        if (!decision) return;
+
+        this.terminal.write('\n🤔 KARAR NOKTASI!', 'warning');
+        this.terminal.write('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'warning');
+        this.terminal.write(`\n${decision.title}`, 'mission');
+        this.terminal.write(`\n${decision.description}\n`, 'info');
+
+        decision.options.forEach((option, index) => {
+            this.terminal.write(`\n${index + 1}. ${option.text}`, 'info');
+            
+            // Etkileri göster
+            const effects = option.effects;
+            if (effects) {
+                const effectTexts = [];
+                if (effects.intel_score) effectTexts.push(`🧠 İstihbarat: ${effects.intel_score > 0 ? '+' : ''}${effects.intel_score}`);
+                if (effects.public_trust) effectTexts.push(`🤝 Güven: ${effects.public_trust > 0 ? '+' : ''}${effects.public_trust}`);
+                if (effects.exposure_risk) effectTexts.push(`⚠️ Risk: ${effects.exposure_risk > 0 ? '+' : ''}${effects.exposure_risk}`);
+                if (effects.timing_pressure) effectTexts.push(`⏱️ Baskı: ${effects.timing_pressure > 0 ? '+' : ''}${effects.timing_pressure}`);
+                if (effects.money) effectTexts.push(`💰 Para: ${effects.money > 0 ? '+' : ''}${effects.money}`);
+                
+                if (effectTexts.length > 0) {
+                    this.terminal.write(`   Etkiler: ${effectTexts.join(', ')}`, 'system');
+                }
+            }
+        });
+
+        this.terminal.write('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'warning');
+        this.terminal.write('\nSeçiminizi yapmak için "decide <numara>" yazın. Örnek: decide 1', 'prompt');
+        
+        // Karar bekleme modu aktif
+        this.awaitingDecision = {
+            decisionId: decisionId,
+            decision: decision
+        };
+    }
+
+    // Karar seçimi
+    makeDecisionChoice(optionIndex) {
+        if (!this.awaitingDecision) {
+            this.terminal.write('❌ Bekleyen bir karar yok!', 'error');
+            return;
+        }
+
+        const { decisionId, decision } = this.awaitingDecision;
+        const option = decision.options[optionIndex - 1];
+        
+        if (!option) {
+            this.terminal.write('❌ Geçersiz seçim!', 'error');
+            return;
+        }
+
+        // Seçimi kaydet
+        this.player.storyDecisions.push({
+            decisionId: decisionId,
+            selectedOption: option.id,
+            timestamp: Date.now()
+        });
+
+        // Etkileri uygula
+        if (option.effects) {
+            const effects = option.effects;
+            
+            if (effects.intel_score) this.player.metrics.intel_score += effects.intel_score;
+            if (effects.public_trust) this.player.metrics.public_trust += effects.public_trust;
+            if (effects.exposure_risk) this.player.metrics.exposure_risk += effects.exposure_risk;
+            if (effects.timing_pressure) this.player.metrics.timing_pressure += effects.timing_pressure;
+            if (effects.money) this.player.money += effects.money;
+            
+            // Bayraklar ekle
+            if (effects.flags && Array.isArray(effects.flags)) {
+                effects.flags.forEach(flag => {
+                    if (!this.player.flags.includes(flag)) {
+                        this.player.flags.push(flag);
+                    }
+                });
+            }
+        }
+
+        // Sonuç mesajını göster
+        this.terminal.write('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'success');
+        this.terminal.write('✅ KARAR VERİLDİ!', 'success');
+        this.terminal.write('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'success');
+        this.terminal.write(`\nSeçiminiz: ${option.text}`, 'info');
+        this.terminal.write(`\n${option.consequence}`, 'warning');
+
+        // Güncel metrikleri göster
+        this.terminal.write('\n📊 Güncel Metrikler:', 'info');
+        this.terminal.write(`🧠 İstihbarat Skoru: ${this.player.metrics.intel_score}`, 'info');
+        this.terminal.write(`🤝 Kamu Güveni: ${this.player.metrics.public_trust}`, 'info');
+        this.terminal.write(`⚠️ İfşa Riski: ${this.player.metrics.exposure_risk}`, 'info');
+        this.terminal.write(`⏱️ Zaman Baskısı: ${this.player.metrics.timing_pressure}`, 'info');
+        
+        if (this.player.flags.length > 0) {
+            this.terminal.write(`\n🔑 Kazanılan Anahtarlar: ${this.player.flags.join(', ')}`, 'system');
+        }
+
+        // Karar modunu kapat
+        this.awaitingDecision = null;
+
+        // Bir sonraki bölümü başlat
+        const nextMission = this.missions.getNextMission(this.player.currentMission?.id || `chapter_${decisionId.replace('D', '')}`);
+        if (nextMission) {
+            this.terminal.write('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n', 'info');
+            setTimeout(() => this.startMission(nextMission.id), 2000);
+        }
+    }
+
+    // Final gösterimi
+    showEnding() {
+        const playerState = {
+            intel_score: this.player.metrics.intel_score,
+            public_trust: this.player.metrics.public_trust,
+            exposure_risk: this.player.metrics.exposure_risk,
+            timing_pressure: this.player.metrics.timing_pressure,
+            flags: this.player.flags,
+            decisionHistory: this.player.storyDecisions
+        };
+
+        const ending = this.missions.calculateEnding(playerState);
+
+        // Final ekranı
+        this.terminal.write('\n\n');
+        this.terminal.write('═════════════════════════════════════════', 'mission');
+        this.terminal.write('          🎬 GHOST PROTOCOL 🎬          ', 'mission');
+        this.terminal.write('═════════════════════════════════════════', 'mission');
+        this.terminal.write('\n', 'info');
+        this.terminal.write(`📜 ${ending.title}`, 'warning');
+        this.terminal.write('\n', 'info');
+        this.terminal.write(ending.description, 'info');
+        this.terminal.write('\n', 'info');
+        this.terminal.write('─────────────────────────────────────────', 'info');
+        this.terminal.write(`💭 ${ending.epilogue}`, 'system');
+        this.terminal.write('─────────────────────────────────────────', 'info');
+
+        // Oyuncu istatistikleri
+        this.terminal.write('\n📊 FİNAL İSTATİSTİKLER:', 'warning');
+        this.terminal.write(`🧠 İstihbarat Skoru: ${this.player.metrics.intel_score}`, 'info');
+        this.terminal.write(`🤝 Kamu Güveni: ${this.player.metrics.public_trust}`, 'info');
+        this.terminal.write(`⚠️ İfşa Riski: ${this.player.metrics.exposure_risk}`, 'info');
+        this.terminal.write(`⏱️ Zaman Baskısı: ${this.player.metrics.timing_pressure}`, 'info');
+        this.terminal.write(`💰 Toplam Para: $${this.player.money}`, 'info');
+        this.terminal.write(`⭐ İtibar: ${this.player.reputation}`, 'info');
+
+        // Kararlar
+        this.terminal.write('\n🎯 VERDİĞİNİZ KARARLAR:', 'warning');
+        this.player.storyDecisions.forEach((dec, index) => {
+            this.terminal.write(`${index + 1}. ${dec.decisionId}: Seçenek ${dec.selectedOption}`, 'info');
+        });
+
+        this.terminal.write('\n═════════════════════════════════════════', 'mission');
+        this.terminal.write('     Oyun Tamamlandı! Teşekkürler!     ', 'success');
+        this.terminal.write('═════════════════════════════════════════', 'mission');
+        this.terminal.write('\nYeni oyun başlatmak için sayfayı yenileyin.', 'prompt');
+    }
+
     checkGameEnding() {
+        // Eski sistem - artık kullanılmıyor, yeni sistem missions.calculateEnding kullanıyor
         const { reputation, worldState } = this.player;
         
         if (reputation > 50 && worldState.globalChaosLevel < 10) {

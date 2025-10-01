@@ -49,6 +49,26 @@ class Terminal {
             'netshield.local': {
                 requiredLevel: 4,
                 description: 'NetShield şirketi iç ağı'
+            },
+            'technova.com': {
+                requiredLevel: 5,
+                description: 'TechNova AR-GE sistemleri'
+            },
+            'fintrust.com': {
+                requiredLevel: 5,
+                description: 'FinTrust finans zinciri'
+            },
+            'sunharbor.port': {
+                requiredLevel: 6,
+                description: 'SunHarbor Limanı yönetim sistemi'
+            },
+            'operation-finale': {
+                requiredLevel: 7,
+                description: 'Final operasyonu hedefi'
+            },
+            'ghost-protocol-finale': {
+                requiredLevel: 8,
+                description: 'Ghost Protocol final'
             }
         };
         
@@ -326,6 +346,12 @@ Başlamak için 'help' komutunu kullanabilirsin.
             case 'cleanup':
                 this.cleanup(args);
                 break;
+            case 'decide':
+                this.decide(args);
+                break;
+            case 'metrics':
+                this.showMetrics();
+                break;
             default:
                 this.write('Bilinmeyen komut. Yardım için "help" yazın.', 'error');
         }
@@ -341,39 +367,48 @@ Başlamak için 'help' komutunu kullanabilirsin.
 
     help() {
         const helpText = `
-Kullanılabilir Komutlar:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         GHOST PROTOCOL - KOMUTLAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Temel Komutlar:
+📋 Temel Komutlar:
   help              - Bu yardım mesajını gösterir
-  clear             - Terminal ekranını temizler (görev bilgilerini korur)
+  clear             - Terminal ekranını temizler
   allclear          - Tüm terminal ekranını temizler
   skills            - Mevcut yeteneklerini gösterir
   missions          - Mevcut görevleri listeler
   money             - Mevcut paranı gösterir
-  tools             - Sahip olduğun araçları listeler
+  metrics           - Oyun metriklerini gösterir (yeni!)
   reputation        - Mevcut itibarını gösterir
   system            - Sistem özelliklerini gösterir
 
-Operasyon Komutları:
-  nmap              - Ağ taraması yapar
+🎯 Hikaye Komutları:
+  decide <numara>   - Karar noktalarında seçim yapar (yeni!)
+                      Örnek: decide 1
+
+🔧 Operasyon Komutları:
+  nmap <hedef>      - Ağ taraması yapar
   netstat           - Açık portları listeler
+  encrypt <metin>   - Veri şifreler
   mailspoof         - Sahte e-posta gönderir
   bruteforce        - Parola kırma işlemi yapar
-  logs              - Sistem kayıtlarını yönetir
+  logs --clear      - Sistem kayıtlarını temizler
   falsealarm        - Yanlış güvenlik uyarısı oluşturur
   bypass_firewall   - Güvenlik duvarını atlatır
   malware_scan      - Zararlı yazılım taraması yapar
   multi_target      - Çoklu hedef operasyonu başlatır
-  zero_day          - Sıfır gün açığı taraması yapar
-  social_attack     - Sosyal mühendislik saldırısı başlatır
-  crypto_track      - Kripto para transferlerini takip eder
-  global_scan       - Uluslararası hedef taraması yapar
+  coordinate        - Operasyon koordinasyonu
+  cleanup           - Sistem temizliği
   final_operation   - Final operasyonunu başlatır
 
-Sistem Komutları:
-  upgrade           - Sistem bileşenlerini yükseltir
+⚙️ Sistem Komutları:
+  upgrade <bileşen> - Sistem bileşenlerini yükseltir
+                      Örnek: upgrade cpu
 
-Her komut için detaylı bilgi almak için: komut --help
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 İpucu: Metrikleri takip etmek için 'metrics' 
+   komutunu kullanın!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 `;
         this.write(helpText);
     }
@@ -1080,6 +1115,61 @@ Kalan para: $${this.game.player.money}
                 this.showMissions();
             }
         }, 1500);
+    }
+
+    // Karar verme komutu
+    decide(args) {
+        if (args.length === 0) {
+            this.write('❌ Hata: Seçim numarası belirtilmedi. Kullanım: decide <numara>', 'error');
+            this.write('Örnek: decide 1', 'info');
+            return;
+        }
+
+        const choice = parseInt(args[0]);
+        if (isNaN(choice)) {
+            this.write('❌ Hata: Geçerli bir numara giriniz!', 'error');
+            return;
+        }
+
+        if (this.game && this.game.awaitingDecision) {
+            this.game.makeDecisionChoice(choice);
+        } else {
+            this.write('❌ Şu anda bekleyen bir karar yok!', 'error');
+        }
+    }
+
+    // Metrikleri göster
+    showMetrics() {
+        if (!this.game) {
+            this.write('❌ Oyun bilgisi bulunamadı!', 'error');
+            return;
+        }
+
+        const metrics = this.game.player.metrics;
+        const flags = this.game.player.flags;
+
+        this.write('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
+        this.write('📊 OYUNCU METRİKLERİ', 'warning');
+        this.write('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
+        this.write(`\n🧠 İstihbarat Skoru: ${metrics.intel_score}`, 'info');
+        this.write(`🤝 Kamu Güveni: ${metrics.public_trust}`, 'info');
+        this.write(`⚠️ İfşa Riski: ${metrics.exposure_risk}`, 'info');
+        this.write(`⏱️ Zaman Baskısı: ${metrics.timing_pressure}`, 'info');
+        
+        if (flags.length > 0) {
+            this.write(`\n🔑 Kazanılan Anahtarlar:`, 'warning');
+            flags.forEach(flag => {
+                this.write(`   • ${flag}`, 'system');
+            });
+        } else {
+            this.write(`\n🔑 Henüz anahtar kazanılmadı.`, 'system');
+        }
+
+        this.write('\n💰 Para: $' + this.game.player.money, 'success');
+        this.write('⭐ İtibar: ' + this.game.player.reputation, 'success');
+        this.write('📈 Seviye: ' + this.game.player.level, 'success');
+        
+        this.write('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n', 'info');
     }
 }
 
