@@ -2,17 +2,17 @@ import GameCard from '@/components/GameCard'
 
 export default function Home() {
   return (
-    <main className="min-h-screen pt-20 pb-12">
+    <main className="w-full min-h-screen pt-20 pb-12">
       {/* Hero Section */}
-      <section className="relative py-24 overflow-hidden">
+      <section className="relative w-full py-24 overflow-hidden">
         {/* Animated background elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl"></div>
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl"></div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center space-y-8">
+        <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center space-y-8 w-full">
             {/* Ana Başlık */}
             <div className="space-y-4">
               <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-heading font-black mb-6">
@@ -80,8 +80,8 @@ export default function Home() {
       </section>
 
       {/* Games Section */}
-      <section id="games" className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="games" className="w-full py-16">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl font-heading font-bold mb-4 bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent">
               Oyunlarımız
@@ -118,11 +118,11 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 relative overflow-hidden">
+      <section className="w-full py-20 relative overflow-hidden">
         {/* Background decoration */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary-950/20 to-transparent"></div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl font-heading font-bold mb-4 text-white">
               Neden <span className="text-primary-400">Frastoly</span>?
@@ -185,8 +185,8 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="w-full py-20">
+        <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative rounded-3xl overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-secondary-600 opacity-90"></div>
             <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10"></div>

@@ -13,18 +13,14 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/" className="flex items-center space-x-3 group">
-              <div className="relative">
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="relative w-9 h-9 flex items-center justify-center">
                 <div className="absolute inset-0 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-lg blur-sm opacity-0 group-hover:opacity-75 transition-opacity"></div>
-                <Image
-                  src="/logo.svg"
-                  alt="Frastoly Logo"
-                  width={36}
-                  height={36}
-                  className="w-9 h-9 relative transition-transform group-hover:scale-110"
-                />
+                <div className="relative w-9 h-9 rounded-lg bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center transition-transform group-hover:scale-110">
+                  <span className="text-white font-bold text-lg">F</span>
+                </div>
               </div>
-              <span className="font-heading text-xl font-bold bg-gradient-to-r from-primary-400 via-secondary-400 to-primary-400 bg-clip-text text-transparent animate-gradient">
+              <span className="font-heading text-xl font-bold bg-gradient-to-r from-primary-400 via-secondary-400 to-primary-400 bg-clip-text text-transparent">
                 Frastoly
               </span>
             </Link>

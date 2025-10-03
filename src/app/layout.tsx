@@ -33,14 +33,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="tr" className={`${poppins.variable} ${exo2.variable}`}>
-      <body className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 text-white">
+      <body className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 text-white antialiased">
+        {/* Background patterns */}
         <div className="fixed inset-0 opacity-10 pointer-events-none -z-10">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
         </div>
         <div className="fixed inset-0 bg-gradient-to-t from-transparent via-purple-500/5 to-transparent pointer-events-none -z-10"></div>
+        
         <SplashScreen>
-          <Navbar />
-          {children}
+          <div className="flex flex-col min-h-screen">
+            <Navbar />
+            <div className="flex-1 w-full">
+              {children}
+            </div>
+          </div>
         </SplashScreen>
       </body>
     </html>
