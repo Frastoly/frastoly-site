@@ -35,7 +35,7 @@ export default function Navbar() {
                 Ana Sayfa
               </Link>
               <Link 
-                href="/oyunlar" 
+                href="/#games" 
                 className="px-4 py-2 rounded-lg text-white hover:text-primary-400 hover:bg-white/5 transition-all duration-300 font-medium"
               >
                 Oyunlar
@@ -100,7 +100,7 @@ export default function Navbar() {
               Ana Sayfa
             </Link>
             <Link
-              href="/oyunlar"
+              href="/#games"
               className="block px-4 py-3 rounded-lg text-white hover:text-primary-400 hover:bg-white/5 transition-all font-medium"
               onClick={() => setIsMenuOpen(false)}
             >

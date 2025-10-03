@@ -103,14 +103,14 @@ export default function Home() {
               title="Kelime Bahçesi"
               description="Türkçe kelimelerin büyülü dünyasında gezinin. Yeni kelimeler öğrenin, kelime haznenizi geliştirin ve dil becerilerinizi ilerletin."
               image="/games/kelime-bahcesi.png"
-              href="/oyunlar/kelime-bahcesi"
+              href="#games"
               isDevelopment={true}
             />
             <GameCard
               title="Zeka Blokları"
               description="Mantık ve strateji becerilerinizi geliştirin. Blokları doğru şekilde yerleştirin, zorlu bulmacaları çözün ve zihinsel yeteneklerinizi test edin."
               image="/games/zeka-bloklari.png"
-              href="/oyunlar/zeka-bloklari"
+              href="#games"
               isDevelopment={true}
             />
           </div>
