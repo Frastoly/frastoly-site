@@ -190,3 +190,4 @@ decide 1        // Karar ver
 **Son Güncelleme**: 1 Ekim 2025  
 **Geliştirici**: Ghost Protocol Ekibi
 
+

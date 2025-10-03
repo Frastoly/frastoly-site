@@ -6,17 +6,19 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative py-24 overflow-hidden">
         {/* Animated background elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl floating"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl floating" style={{animationDelay: '1s'}}></div>
+        <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl"></div>
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-8">
             {/* Ana Başlık */}
-            <div className="space-y-4 fade-in-up opacity-0" style={{animationDelay: '0.2s'}}>
+            <div className="space-y-4">
               <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-heading font-black mb-6">
-                <span className="block text-shimmer">Frastoly</span>
+                <span className="block bg-gradient-to-r from-primary-400 via-secondary-400 to-primary-400 bg-clip-text text-transparent">
+                  Frastoly
+                </span>
                 <span className="block text-4xl sm:text-5xl md:text-6xl mt-2 bg-gradient-to-r from-primary-400 via-secondary-400 to-primary-400 bg-clip-text text-transparent">
                   Oyunları
                 </span>
@@ -31,7 +33,7 @@ export default function Home() {
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 fade-in-up opacity-0" style={{animationDelay: '0.4s'}}>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
                 href="#games"
                 className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-primary-600 to-secondary-600 text-white font-semibold rounded-xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-primary-500/50 hover:scale-105"
@@ -57,7 +59,7 @@ export default function Home() {
             </div>
 
             {/* Stats */}
-            <div className="flex flex-wrap items-center justify-center gap-8 pt-8 fade-in-up opacity-0" style={{animationDelay: '0.6s'}}>
+            <div className="flex flex-wrap items-center justify-center gap-8 pt-8">
               <div className="text-center">
                 <div className="text-3xl sm:text-4xl font-bold text-primary-400 font-heading">3+</div>
                 <div className="text-sm text-gray-400 mt-1">Oyun</div>
@@ -80,7 +82,7 @@ export default function Home() {
       {/* Games Section */}
       <section id="games" className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 fade-in-up opacity-0">
+          <div className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl font-heading font-bold mb-4 bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent">
               Oyunlarımız
             </h2>
@@ -90,33 +92,27 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="animation-delay-100">
-              <GameCard
-                title="Siber İz Sürücü"
-                description="Siber güvenlik dünyasında macera dolu bir yolculuğa çıkın. Terminal komutları, hacking simülasyonu ve 6 farklı son ile dolu epik bir hikaye sizi bekliyor."
-                image="/games/siber-iz-surucu.png"
-                href="/siber-iz-surucu"
-                isDevelopment={false}
-              />
-            </div>
-            <div className="animation-delay-200">
-              <GameCard
-                title="Kelime Bahçesi"
-                description="Türkçe kelimelerin büyülü dünyasında gezinin. Yeni kelimeler öğrenin, kelime haznenizi geliştirin ve dil becerilerinizi ilerletin."
-                image="/games/kelime-bahcesi.png"
-                href="/oyunlar/kelime-bahcesi"
-                isDevelopment={true}
-              />
-            </div>
-            <div className="animation-delay-300">
-              <GameCard
-                title="Zeka Blokları"
-                description="Mantık ve strateji becerilerinizi geliştirin. Blokları doğru şekilde yerleştirin, zorlu bulmacaları çözün ve zihinsel yeteneklerinizi test edin."
-                image="/games/zeka-bloklari.png"
-                href="/oyunlar/zeka-bloklari"
-                isDevelopment={true}
-              />
-            </div>
+            <GameCard
+              title="Siber İz Sürücü"
+              description="Siber güvenlik dünyasında macera dolu bir yolculuğa çıkın. Terminal komutları, hacking simülasyonu ve 6 farklı son ile dolu epik bir hikaye sizi bekliyor."
+              image="/games/siber-iz-surucu.png"
+              href="/siber-iz-surucu"
+              isDevelopment={false}
+            />
+            <GameCard
+              title="Kelime Bahçesi"
+              description="Türkçe kelimelerin büyülü dünyasında gezinin. Yeni kelimeler öğrenin, kelime haznenizi geliştirin ve dil becerilerinizi ilerletin."
+              image="/games/kelime-bahcesi.png"
+              href="/oyunlar/kelime-bahcesi"
+              isDevelopment={true}
+            />
+            <GameCard
+              title="Zeka Blokları"
+              description="Mantık ve strateji becerilerinizi geliştirin. Blokları doğru şekilde yerleştirin, zorlu bulmacaları çözün ve zihinsel yeteneklerinizi test edin."
+              image="/games/zeka-bloklari.png"
+              href="/oyunlar/zeka-bloklari"
+              isDevelopment={true}
+            />
           </div>
         </div>
       </section>
@@ -127,7 +123,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary-950/20 to-transparent"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 fade-in-up opacity-0">
+          <div className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl font-heading font-bold mb-4 text-white">
               Neden <span className="text-primary-400">Frastoly</span>?
             </h2>
@@ -138,7 +134,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Feature 1 */}
-            <div className="fade-in-up opacity-0 animation-delay-100">
+            <div>
               <div className="group relative h-full p-8 rounded-2xl bg-slate-900/50 backdrop-blur-xl border border-white/10 hover:border-primary-400/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary-500/20">
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-2xl blur opacity-0 group-hover:opacity-30 transition duration-500"></div>
                 <div className="relative">
@@ -154,7 +150,7 @@ export default function Home() {
             </div>
 
             {/* Feature 2 */}
-            <div className="fade-in-up opacity-0 animation-delay-200">
+            <div>
               <div className="group relative h-full p-8 rounded-2xl bg-slate-900/50 backdrop-blur-xl border border-white/10 hover:border-secondary-400/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-secondary-500/20">
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-secondary-500 to-primary-500 rounded-2xl blur opacity-0 group-hover:opacity-30 transition duration-500"></div>
                 <div className="relative">
@@ -170,7 +166,7 @@ export default function Home() {
             </div>
 
             {/* Feature 3 */}
-            <div className="fade-in-up opacity-0 animation-delay-300">
+            <div>
               <div className="group relative h-full p-8 rounded-2xl bg-slate-900/50 backdrop-blur-xl border border-white/10 hover:border-primary-400/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary-500/20">
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-2xl blur opacity-0 group-hover:opacity-30 transition duration-500"></div>
                 <div className="relative">
@@ -196,15 +192,15 @@ export default function Home() {
             <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10"></div>
             
             <div className="relative px-8 py-16 sm:px-12 sm:py-20 text-center">
-              <h2 className="text-3xl sm:text-4xl font-heading font-bold text-white mb-4 fade-in-up opacity-0">
+              <h2 className="text-3xl sm:text-4xl font-heading font-bold text-white mb-4">
                 Hemen Oynamaya Başla!
               </h2>
-              <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto fade-in-up opacity-0 animation-delay-100">
+              <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
                 Ücretsiz, eğlenceli ve öğretici oyunlarla dolu dünyamıza katıl. Kayıt gerekmez!
               </p>
               <a
                 href="#games"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-primary-600 font-bold rounded-xl hover:bg-gray-100 transition-all duration-300 hover:scale-105 hover:shadow-2xl fade-in-up opacity-0 animation-delay-200"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-primary-600 font-bold rounded-xl hover:bg-gray-100 transition-all duration-300 hover:scale-105 hover:shadow-2xl"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />

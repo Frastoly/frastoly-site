@@ -19,7 +19,7 @@ export default function GameCard({
   isDevelopment = false,
 }: GameCardProps) {
   return (
-    <div className="group relative fade-in-up opacity-0">
+    <div className="group relative">
       <div className="absolute -inset-0.5 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-2xl blur opacity-0 group-hover:opacity-75 transition duration-500"></div>
       
       <div className="relative bg-slate-900/90 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/10 hover:border-white/20 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary-500/20">

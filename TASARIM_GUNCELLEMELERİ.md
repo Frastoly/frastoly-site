@@ -200,3 +200,5 @@ Deploy sonrası kontrol edilecekler:
 **Tarih**: 1 Ekim 2025  
 **Durum**: ✅ Tamamlandı
 
+
+
