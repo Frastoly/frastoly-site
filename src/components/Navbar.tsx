@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -13,11 +14,14 @@ export default function Navbar() {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="relative w-9 h-9 flex items-center justify-center">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-lg blur-sm opacity-0 group-hover:opacity-75 transition-opacity"></div>
-                <div className="relative w-9 h-9 rounded-lg bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center transition-transform group-hover:scale-110">
-                  <span className="text-white font-bold text-lg">F</span>
-                </div>
+              <div className="relative w-10 h-10">
+                <Image 
+                  src="/assets/logo.png" 
+                  alt="Frastoly Logo" 
+                  width={40} 
+                  height={40} 
+                  className="object-contain drop-shadow-[0_0_10px_rgba(139,92,246,0.5)] transition-transform group-hover:scale-110"
+                />
               </div>
               <span className="font-heading text-xl font-bold bg-gradient-to-r from-primary-400 via-secondary-400 to-primary-400 bg-clip-text text-transparent">
                 Frastoly
