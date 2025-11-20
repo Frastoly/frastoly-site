@@ -2,12 +2,14 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import SortingGame from '@/components/zeka-bloklari/SortingGame'
-import LogicGame from '@/components/zeka-bloklari/LogicGame'
-import PatternGame from '@/components/zeka-bloklari/PatternGame'
-import MergeGame from '@/components/zeka-bloklari/MergeGame'
+import SortingGame from '@/components/games/logic/SortingGame'
+import LogicGame from '@/components/games/logic/LogicGame'
+import PatternGame from '@/components/games/memory/PatternGame'
+import MergeGame from '@/components/games/logic/MergeGame'
+import CircuitGame from '@/components/games/logic/CircuitGame'
+import MinesweeperGame from '@/components/games/logic/MinesweeperGame'
 
-type GameMode = 'MENU' | 'SORTING' | 'LOGIC' | 'PATTERN' | 'MERGE'
+type GameMode = 'MENU' | 'SORTING' | 'LOGIC' | 'PATTERN' | 'MERGE' | 'CIRCUIT' | 'MINESWEEPER'
 
 export default function ZekaBloklariPage() {
   const [gameMode, setGameMode] = useState<GameMode>('MENU')
@@ -39,7 +41,7 @@ export default function ZekaBloklariPage() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
                 {/* Sıralama Modu */}
                 <button
                   onClick={() => setGameMode('SORTING')}
@@ -112,6 +114,40 @@ export default function ZekaBloklariPage() {
                     </p>
                   </div>
                 </button>
+
+                {/* Devre Modu */}
+                <button
+                  onClick={() => setGameMode('CIRCUIT')}
+                  className="group relative p-6 rounded-3xl bg-slate-900/60 border border-white/10 hover:border-amber-400/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-amber-500/20 text-left overflow-hidden h-full"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="relative z-10 flex flex-col h-full">
+                    <div className="w-14 h-14 mb-4 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                      <span className="text-2xl font-bold text-white">⚡</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-amber-400 transition-colors">Devreler</h3>
+                    <p className="text-gray-400 text-sm leading-relaxed">
+                      Kabloları döndürerek enerjiyi ilet.
+                    </p>
+                  </div>
+                </button>
+
+                {/* Mayın Modu */}
+                <button
+                  onClick={() => setGameMode('MINESWEEPER')}
+                  className="group relative p-6 rounded-3xl bg-slate-900/60 border border-white/10 hover:border-red-400/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-red-500/20 text-left overflow-hidden h-full"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 to-rose-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="relative z-10 flex flex-col h-full">
+                    <div className="w-14 h-14 mb-4 bg-gradient-to-br from-red-400 to-rose-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                      <span className="text-2xl font-bold text-white">💣</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-red-400 transition-colors">Mayınlar</h3>
+                    <p className="text-gray-400 text-sm leading-relaxed">
+                      Güvenli alanları bul, virüslerden kaçın.
+                    </p>
+                  </div>
+                </button>
               </div>
             </motion.div>
           )}
@@ -122,6 +158,8 @@ export default function ZekaBloklariPage() {
               {gameMode === 'LOGIC' && <LogicGame onBack={handleBackToMenu} />}
               {gameMode === 'PATTERN' && <PatternGame onBack={handleBackToMenu} />}
               {gameMode === 'MERGE' && <MergeGame onBack={handleBackToMenu} />}
+              {gameMode === 'CIRCUIT' && <CircuitGame />}
+              {gameMode === 'MINESWEEPER' && <MinesweeperGame />}
             </div>
           )}
         </AnimatePresence>
