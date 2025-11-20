@@ -3,6 +3,7 @@ export interface GameConfig {
   title: string;
   description: string;
   category: 'logic' | 'memory' | 'word' | 'reflex';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   component?: any; // Will load dynamically
   icon?: string;
   isNew?: boolean;

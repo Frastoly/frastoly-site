@@ -54,17 +54,16 @@ export default function CircuitGame() {
   }
 
   const checkPower = (currentGrid: Cell[]) => {
-    // BFS/DFS to trace power from source
-    // Mock implementation for visual feel
+    // Mock logic for now
     const newGrid = currentGrid.map(c => ({...c, powered: c.type === 'source'}))
-    
-    // Just a visual mock logic: if connected to left/top powered cell
-    // Real logic requires graph traversal based on open ports of each piece
-    // For this demo, we'll randomize power state to show effect or keep simplest
-    
-    // Let's verify 'win' condition as if all aligned
-    // (Skipping complex graph logic for this turn to focus on UI structure first)
     setGrid(newGrid)
+    
+    // Check win condition (simple mock)
+    const allPowered = newGrid.every(c => c.powered)
+    if (allPowered) {
+      setIsComplete(true)
+      setLevel(l => l + 1)
+    }
   }
 
   return (
