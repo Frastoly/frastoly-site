@@ -109,8 +109,7 @@ export default function Home() {
               title="Zeka Blokları"
               description="Mantık ve strateji becerilerinizi geliştirin. Blokları doğru şekilde yerleştirin, zorlu bulmacaları çözün ve zihinsel yeteneklerinizi test edin."
               image="/games/zeka-bloklari.png"
-              href="#games"
-              isDevelopment={true}
+              href="/zeka-bloklari"
             />
           </div>
         </div>
