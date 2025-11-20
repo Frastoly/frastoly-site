@@ -28,7 +28,6 @@ export default function ClassicGame({ mode, onBack }: ClassicGameProps) {
   const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' | 'info' } | null>(null)
   const [chainLength, setChainLength] = useState(0)
   const [lastChainWord, setLastChainWord] = useState<string>('')
-  const [gameStatus, setGameStatus] = useState<'playing' | 'finished'>('playing')
   const [flowerScale, setFlowerScale] = useState(1)
 
   // Helper to show temporary messages
@@ -52,14 +51,8 @@ export default function ClassicGame({ mode, onBack }: ClassicGameProps) {
       )
       
       if (validWords.length === 0) {
-        // No words continue the chain, maybe reset chain or just pick random to save game?
-        // Original logic says "Türetilecek kelime kalmadı" and maybe ends game?
-        // Let's just pick a random word to continue if strictly needed, but for now let's try to find one.
-        // If really empty, fallback to any word starting with that letter even if length mismatch?
-        // Or just reset chain for gameplay sake but keep score?
-        // Original: "uygunKelimeler = kelimeler" if none found initially.
+        // Fallback to regular words if chain cannot continue (or warn user)
         validWords = words.filter(w => w.length === settings.letterCount)
-        // Warn user chain broke?
       }
     } else {
       validWords = words.filter(w => w.length === settings.letterCount)
@@ -70,7 +63,7 @@ export default function ClassicGame({ mode, onBack }: ClassicGameProps) {
     const randomWord = validWords[Math.floor(Math.random() * validWords.length)]
     const letters = randomWord.split('')
     
-    // Fill if not enough letters (shouldn't happen with length filter but just in case)
+    // Fill if not enough letters
     const alphabet = "abcçdefgğhıijklmnoöprsştuüvyz"
     while (letters.length < settings.letterCount) {
       letters.push(alphabet[Math.floor(Math.random() * alphabet.length)])
@@ -85,7 +78,6 @@ export default function ClassicGame({ mode, onBack }: ClassicGameProps) {
     setCurrentLetters(letters)
     setFoundWords([])
     setInput('')
-    setGameStatus('playing')
   }, [words, difficulty, mode, lastChainWord])
 
   // Initial start
@@ -95,7 +87,7 @@ export default function ClassicGame({ mode, onBack }: ClassicGameProps) {
     }
   }, [words, startRound, currentLetters.length])
 
-  const handleLetterClick = (letter: string, index: number) => {
+  const handleLetterClick = (letter: string) => {
     // Simple append for now. Could implement "use each letter once" logic if strictly required, 
     // but original game just checked if letters exist in available set.
     // Actually original: `harflerKopya.splice(idx, 1)` implies one-to-one mapping.
@@ -120,7 +112,7 @@ export default function ClassicGame({ mode, onBack }: ClassicGameProps) {
     }
 
     // Check if word can be formed from current letters
-    let available = [...currentLetters.map(l => l.toLocaleLowerCase('tr'))]
+    const available = [...currentLetters.map(l => l.toLocaleLowerCase('tr'))]
     for (const char of guess) {
       const idx = available.indexOf(char)
       if (idx === -1) {
@@ -181,7 +173,7 @@ export default function ClassicGame({ mode, onBack }: ClassicGameProps) {
     const possibleWords = words.filter(w => {
       if (foundWords.includes(w.toLocaleLowerCase('tr')) || w.toLocaleLowerCase('tr') === guess) return false
       
-      let tempLetters = [...currentLetters.map(l => l.toLocaleLowerCase('tr'))]
+      const tempLetters = [...currentLetters.map(l => l.toLocaleLowerCase('tr'))]
       for (const c of w.toLocaleLowerCase('tr')) {
         const idx = tempLetters.indexOf(c)
         if (idx === -1) return false
@@ -243,7 +235,7 @@ export default function ClassicGame({ mode, onBack }: ClassicGameProps) {
     // Find a word not yet found
      const possibleWord = words.find(w => {
       if (foundWords.includes(w.toLocaleLowerCase('tr'))) return false
-      let tempLetters = [...currentLetters.map(l => l.toLocaleLowerCase('tr'))]
+      const tempLetters = [...currentLetters.map(l => l.toLocaleLowerCase('tr'))]
       for (const c of w.toLocaleLowerCase('tr')) {
         const idx = tempLetters.indexOf(c)
         if (idx === -1) return false
@@ -333,7 +325,7 @@ export default function ClassicGame({ mode, onBack }: ClassicGameProps) {
               key={`${idx}-${letter}`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              onClick={() => handleLetterClick(letter, idx)}
+              onClick={() => handleLetterClick(letter)}
               className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20 flex items-center justify-center text-2xl font-bold text-white shadow-lg hover:border-amber-400/50 hover:shadow-amber-500/20 transition-all"
             >
               {letter.toLocaleUpperCase('tr')}
