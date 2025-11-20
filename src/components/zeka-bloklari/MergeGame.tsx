@@ -221,7 +221,7 @@ export default function MergeGame({ onBack }: MergeGameProps) {
              <h3 className="text-4xl font-black text-white mb-4">
                {won ? 'Tebrikler!' : 'Oyun Bitti'}
              </h3>
-             {won && <p className="text-emerald-400 mb-6 font-bold">2048&apos;e ulaştın!</p>}
+             {won && <p className="text-emerald-400 mb-6 font-bold">2048'e ulaştın!</p>}
              <button
                onClick={initGame}
                className="px-8 py-3 bg-white text-slate-900 font-bold rounded-xl hover:scale-105 transition-transform"
@@ -243,4 +243,3 @@ export default function MergeGame({ onBack }: MergeGameProps) {
     </motion.div>
   )
 }
-

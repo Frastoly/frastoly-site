@@ -123,4 +123,3 @@ export default function LogicGame({ onBack }: LogicGameProps) {
     </motion.div>
   )
 }
-

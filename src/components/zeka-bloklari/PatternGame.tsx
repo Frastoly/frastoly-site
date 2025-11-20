@@ -148,4 +148,3 @@ export default function PatternGame({ onBack }: PatternGameProps) {
     </motion.div>
   )
 }
-

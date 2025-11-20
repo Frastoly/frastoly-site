@@ -114,4 +114,3 @@ export default function SortingGame({ onBack }: SortingGameProps) {
     </motion.div>
   )
 }
-
