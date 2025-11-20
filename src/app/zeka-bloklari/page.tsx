@@ -108,7 +108,7 @@ export default function ZekaBloklariPage() {
                     </div>
                     <h3 className="text-xl font-bold text-white mb-2 group-hover:text-emerald-400 transition-colors">Birleştir</h3>
                     <p className="text-gray-400 text-sm leading-relaxed">
-                      Aynı sayıları birleştirerek 2048'e ulaş.
+                      Aynı sayıları birleştirerek 2048&apos;e ulaş.
                     </p>
                   </div>
                 </button>
