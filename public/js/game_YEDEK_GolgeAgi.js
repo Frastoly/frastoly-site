@@ -52,9 +52,9 @@ class Game {
             stealth: 1,
             speed: 1
         };
-
-        // İlk bölümü başlat (Kırılma Noktası - Prologue)
-        this.startMission('prologue');
+        
+        // İlk bölümü başlat
+        this.startMission('chapter_1');
     }
 
     startMission(missionId) {
@@ -68,49 +68,34 @@ class Game {
 
         this.player.currentMission = mission;
         this.player.completedSteps = [];
-
+        
         // Görev başlangıç mesajını göster
         this.terminal.write('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
-        this.terminal.write('🎬 ' + mission.title, 'mission');
+        this.terminal.write('🎯 YENİ BÖLÜM BAŞLADI!', 'success');
         this.terminal.write('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
-
-        // Briefing mesajını göster
-        if (mission.briefing) {
-            this.terminal.write('\n' + mission.briefing, 'warning');
-        }
-
+        this.terminal.write(`\n${mission.title}`, 'mission');
+        
         // Hikaye metnini göster
         if (mission.story) {
-            this.terminal.write('\n📖 ─────────────────────────────────────', 'info');
+            this.terminal.write(`\n📖 Hikaye:`, 'info');
             this.terminal.write(mission.story, 'info');
-            this.terminal.write('─────────────────────────────────────────', 'info');
         }
-
-        // Debriefing varsa göster (hikayenin devamı)
-        if (mission.debriefing) {
-            this.terminal.write('\n' + mission.debriefing, 'system');
+        
+        // Briefing mesajını göster
+        if (mission.briefing) {
+            this.terminal.write('\n📋 Görev Brifingi:', 'warning');
+            this.terminal.write(mission.briefing, 'info');
         }
-
-        this.terminal.write('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
-
-        // Karar noktası varsa doğrudan göster
-        if (mission.hasDecision && mission.decisionId) {
-            setTimeout(() => {
-                this.showDecision(mission.decisionId);
-            }, 1500);
-        } else if (mission.isFinal) {
-            // Final bölümüyse son göster
-            setTimeout(() => {
-                this.showEnding();
-            }, 2000);
-        } else {
-            // Karar yoksa otomatik ilerle
-            this.terminal.write('\n⏳ Hikaye devam ediyor...', 'prompt');
-            const nextMission = this.missions.getNextMission(missionId);
-            if (nextMission) {
-                setTimeout(() => this.startMission(nextMission.id), 3000);
-            }
-        }
+        
+        this.terminal.write(`\n🎯 Hedef: ${mission.target}`, 'info');
+        this.terminal.write(`📄 Açıklama: ${mission.targetDescription}`, 'info');
+        
+        this.terminal.write('\n✅ Görev Adımları:', 'info');
+        mission.steps.forEach((step, index) => {
+            this.terminal.write(`  ${index + 1}. [ ] ${step}`, 'info');
+        });
+        
+        this.terminal.write('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n', 'info');
     }
 
     completeMission(missionId) {
@@ -335,13 +320,13 @@ class Game {
 
     makeDecision(decisionData) {
         const { description, options } = decisionData;
-
+        
         // Karar menüsünü göster
         this.terminal.write('\n🤔 Karar Zamanı!', 'info');
         this.terminal.write('-------------------', 'info');
         this.terminal.write(description, 'info');
         this.terminal.write('\nSeçenekler:', 'info');
-
+        
         options.forEach((option, index) => {
             this.terminal.write(`${index + 1}. ${option.text}`, 'info');
         });
@@ -372,11 +357,11 @@ class Game {
 
     applyDecisionConsequences(option) {
         const { consequences } = option;
-
+        
         // Para değişimi
         if (consequences.money) {
             this.player.money += consequences.money;
-            this.terminal.write(`💰 Para: ${consequences.money > 0 ? '+' : ''}${consequences.money}`,
+            this.terminal.write(`💰 Para: ${consequences.money > 0 ? '+' : ''}${consequences.money}`, 
                 consequences.money > 0 ? 'success' : 'error');
         }
 
@@ -406,10 +391,9 @@ class Game {
         this.terminal.write(`\n${decision.title}`, 'mission');
         this.terminal.write(`\n${decision.description}\n`, 'info');
 
-        // Seçenekleri metin olarak göster
         decision.options.forEach((option, index) => {
             this.terminal.write(`\n${index + 1}. ${option.text}`, 'info');
-
+            
             // Etkileri göster
             const effects = option.effects;
             if (effects) {
@@ -419,7 +403,7 @@ class Game {
                 if (effects.exposure_risk) effectTexts.push(`⚠️ Risk: ${effects.exposure_risk > 0 ? '+' : ''}${effects.exposure_risk}`);
                 if (effects.timing_pressure) effectTexts.push(`⏱️ Baskı: ${effects.timing_pressure > 0 ? '+' : ''}${effects.timing_pressure}`);
                 if (effects.money) effectTexts.push(`💰 Para: ${effects.money > 0 ? '+' : ''}${effects.money}`);
-
+                
                 if (effectTexts.length > 0) {
                     this.terminal.write(`   Etkiler: ${effectTexts.join(', ')}`, 'system');
                 }
@@ -427,22 +411,13 @@ class Game {
         });
 
         this.terminal.write('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'warning');
-        this.terminal.write('\n🎯 SEÇİM YAPIN:', 'prompt');
-
-        // Tıklanabilir butonlar oluştur
-        this.terminal.createChoiceButtons(decision.options, (selectedIndex) => {
-            // selectedIndex 0'dan başlıyor, makeDecisionChoice 1'den başlayan index bekliyor
-            this.makeDecisionChoice(selectedIndex + 1);
-        });
-
+        this.terminal.write('\nSeçiminizi yapmak için "decide <numara>" yazın. Örnek: decide 1', 'prompt');
+        
         // Karar bekleme modu aktif
         this.awaitingDecision = {
             decisionId: decisionId,
             decision: decision
         };
-
-        // Debug için log
-        console.log('Karar gösterildi:', decisionId, 'Seçenek sayısı:', decision.options.length);
     }
 
     // Karar seçimi
@@ -454,7 +429,7 @@ class Game {
 
         const { decisionId, decision } = this.awaitingDecision;
         const option = decision.options[optionIndex - 1];
-
+        
         if (!option) {
             this.terminal.write('❌ Geçersiz seçim!', 'error');
             return;
@@ -470,13 +445,13 @@ class Game {
         // Etkileri uygula
         if (option.effects) {
             const effects = option.effects;
-
+            
             if (effects.intel_score) this.player.metrics.intel_score += effects.intel_score;
             if (effects.public_trust) this.player.metrics.public_trust += effects.public_trust;
             if (effects.exposure_risk) this.player.metrics.exposure_risk += effects.exposure_risk;
             if (effects.timing_pressure) this.player.metrics.timing_pressure += effects.timing_pressure;
             if (effects.money) this.player.money += effects.money;
-
+            
             // Bayraklar ekle
             if (effects.flags && Array.isArray(effects.flags)) {
                 effects.flags.forEach(flag => {
@@ -500,7 +475,7 @@ class Game {
         this.terminal.write(`🤝 Kamu Güveni: ${this.player.metrics.public_trust}`, 'info');
         this.terminal.write(`⚠️ İfşa Riski: ${this.player.metrics.exposure_risk}`, 'info');
         this.terminal.write(`⏱️ Zaman Baskısı: ${this.player.metrics.timing_pressure}`, 'info');
-
+        
         if (this.player.flags.length > 0) {
             this.terminal.write(`\n🔑 Kazanılan Anahtarlar: ${this.player.flags.join(', ')}`, 'system');
         }
@@ -508,34 +483,11 @@ class Game {
         // Karar modunu kapat
         this.awaitingDecision = null;
 
-        // Bir sonraki bölümü başlat - currentMission'dan veya kararın bağlı olduğu bölümden bul
-        let currentChapterId = null;
-
-        // Hangi bölümden geldiğimizi bul
-        const decisionToChapterMap = {
-            'D_PROLOGUE': 'prologue',
-            'D_FACTION': 'chapter_2',
-            'D_APPROACH': 'chapter_3',
-            'D_FAMILY': 'chapter_4',
-            'D_TREASON': 'chapter_5',
-            'D_FINAL': 'chapter_6'
-        };
-
-        currentChapterId = decisionToChapterMap[decisionId] || this.player.currentMission?.id;
-        console.log('Mevcut bölüm:', currentChapterId, 'Karar:', decisionId);
-
-        const nextMission = this.missions.getNextMission(currentChapterId);
-        console.log('Sonraki bölüm:', nextMission ? nextMission.id : 'YOK');
-
+        // Bir sonraki bölümü başlat
+        const nextMission = this.missions.getNextMission(this.player.currentMission?.id || `chapter_${decisionId.replace('D', '')}`);
         if (nextMission) {
-            this.terminal.write('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
-            this.terminal.write('\n⏳ Bir sonraki bölüme geçiliyor...', 'prompt');
+            this.terminal.write('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n', 'info');
             setTimeout(() => this.startMission(nextMission.id), 2000);
-        } else if (decisionId === 'D_FINAL') {
-            // Final kararı - oyun sonu göster
-            setTimeout(() => this.showEnding(), 2000);
-        } else {
-            console.log('Sonraki bölüm bulunamadı!');
         }
     }
 
@@ -555,7 +507,7 @@ class Game {
         // Final ekranı
         this.terminal.write('\n\n');
         this.terminal.write('═════════════════════════════════════════', 'mission');
-        this.terminal.write('   🎬 GHOST PROTOCOL: KIRILMA NOKTASI 🎬   ', 'mission');
+        this.terminal.write('          🎬 GHOST PROTOCOL 🎬          ', 'mission');
         this.terminal.write('═════════════════════════════════════════', 'mission');
         this.terminal.write('\n', 'info');
         this.terminal.write(`📜 ${ending.title}`, 'warning');
@@ -590,7 +542,7 @@ class Game {
     checkGameEnding() {
         // Eski sistem - artık kullanılmıyor, yeni sistem missions.calculateEnding kullanıyor
         const { reputation, worldState } = this.player;
-
+        
         if (reputation > 50 && worldState.globalChaosLevel < 10) {
             return {
                 type: 'good',

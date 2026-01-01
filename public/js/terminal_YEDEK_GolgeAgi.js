@@ -13,7 +13,7 @@ class Terminal {
         this.missionInfo = null;
         this.decisionCallback = null;
         this.isWaitingForDecision = false;
-
+        
         // Sistem özellikleri - Başlangıç değerleri güncellendi
         this.system = {
             cpu: 2,      // nmap için yeterli başlangıç seviyesi
@@ -22,7 +22,7 @@ class Terminal {
             network: 2,  // nmap için yeterli başlangıç seviyesi
             security: 2  // logs için yeterli başlangıç seviyesi
         };
-
+        
         // Sistem yükseltme maliyetleri - Daha makul değerler
         this.upgradeCosts = {
             cpu: 300,
@@ -31,7 +31,7 @@ class Terminal {
             network: 350,
             security: 400
         };
-
+        
         // İzin verilen hedef siteler
         this.allowedTargets = {
             'frastoly.com': {
@@ -71,7 +71,7 @@ class Terminal {
                 description: 'Ghost Protocol final'
             }
         };
-
+        
         // Hata sayacı ve ipucu sistemi
         this.errorCount = {};
         this.hints = {
@@ -83,7 +83,7 @@ class Terminal {
             'bruteforce': 'Parola kırmak için: bruteforce --target hedef --user kullanıcı',
             'skills': 'Yeteneklerini görmek için: skills'
         };
-
+        
         this.setupEventListeners();
         this.welcome();
     }
@@ -165,9 +165,9 @@ Başlamak için 'help' komutunu kullanabilirsin.
     write(text, type = 'normal') {
         const line = document.createElement('div');
         line.className = `terminal-line ${type}`;
-
+        
         // Mesaj türüne göre renk belirleme
-        switch (type) {
+        switch(type) {
             case 'error':
                 line.style.color = '#ff5555'; // Kırmızı - Hata mesajları
                 break;
@@ -195,87 +195,9 @@ Başlamak için 'help' komutunu kullanabilirsin.
             default:
                 line.style.color = '#f8f8f2'; // Varsayılan beyaz
         }
-
+        
         line.textContent = text;
         this.output.appendChild(line);
-        this.output.scrollTop = this.output.scrollHeight;
-    }
-
-    // Tıklanabilir seçim butonları oluştur
-    createChoiceButtons(options, callback) {
-        const buttonContainer = document.createElement('div');
-        buttonContainer.className = 'choice-buttons';
-        buttonContainer.style.cssText = `
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin: 15px 0;
-            padding: 10px;
-        `;
-
-        options.forEach((option, index) => {
-            const button = document.createElement('button');
-            button.className = 'choice-button';
-            button.innerHTML = `<span class="choice-number">${index + 1}</span> ${option.text}`;
-            button.style.cssText = `
-                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-                border: 2px solid #0f3460;
-                border-radius: 12px;
-                color: #e0e0e0;
-                padding: 15px 20px;
-                font-size: 14px;
-                font-family: 'Fira Code', 'Courier New', monospace;
-                cursor: pointer;
-                text-align: left;
-                transition: all 0.3s ease;
-                position: relative;
-                overflow: hidden;
-            `;
-
-            // Hover efektleri
-            button.addEventListener('mouseenter', () => {
-                button.style.background = 'linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%)';
-                button.style.borderColor = '#e94560';
-                button.style.color = '#ffffff';
-                button.style.transform = 'translateX(10px)';
-                button.style.boxShadow = '0 0 20px rgba(233, 69, 96, 0.3)';
-            });
-
-            button.addEventListener('mouseleave', () => {
-                button.style.background = 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)';
-                button.style.borderColor = '#0f3460';
-                button.style.color = '#e0e0e0';
-                button.style.transform = 'translateX(0)';
-                button.style.boxShadow = 'none';
-            });
-
-            // Tıklama olayı
-            button.addEventListener('click', () => {
-                // Tüm butonları devre dışı bırak
-                buttonContainer.querySelectorAll('button').forEach(btn => {
-                    btn.disabled = true;
-                    btn.style.opacity = '0.5';
-                    btn.style.cursor = 'not-allowed';
-                });
-
-                // Seçilen butonu vurgula
-                button.style.opacity = '1';
-                button.style.borderColor = '#50fa7b';
-                button.style.background = 'linear-gradient(135deg, #1a472a 0%, #16213e 100%)';
-
-                // Seçim mesajı yaz
-                this.write(`\n✅ Seçiminiz: ${option.text}`, 'success');
-
-                // Callback'i çağır
-                setTimeout(() => {
-                    callback(index);
-                }, 500);
-            });
-
-            buttonContainer.appendChild(button);
-        });
-
-        this.output.appendChild(buttonContainer);
         this.output.scrollTop = this.output.scrollHeight;
     }
 
@@ -291,13 +213,13 @@ Başlamak için 'help' komutunu kullanabilirsin.
 
         // Hata sayacını güncelle
         if (this.game && this.game.player.currentMission) {
-            const currentStep = this.game.player.currentMission.steps.find(step =>
+            const currentStep = this.game.player.currentMission.steps.find(step => 
                 step.includes(cmd) && !this.game.player.completedSteps.includes(step)
             );
-
+            
             if (currentStep) {
                 this.errorCount[currentStep] = (this.errorCount[currentStep] || 0) + 1;
-
+                
                 // 3 hata sonrası ipucu göster
                 if (this.errorCount[currentStep] >= 3) {
                     const hint = this.hints[cmd];
@@ -533,7 +455,7 @@ Sosyal Mühendislik: ${skills.socialEngineering}
             const mission = this.game.player.currentMission;
             if (mission) {
                 const completedSteps = this.game.player.completedSteps || [];
-
+                
                 if (completedSteps.length === 4) {
                     this.write(`
 🎉 Görev Tamamlandı!
@@ -551,7 +473,7 @@ Sistem yükseltme seçeneklerini görmek için: system
 
                 if (!this.missionInfo || this.lastCommand === 'missions') {
                     let missionsText = `\nAktif Görev:\n----------------\n${mission.title}\n${mission.description}\nZorluk: ${mission.difficulty}\nÖdül: ${mission.experience} XP\n\n`;
-
+                    
                     if (mission.title.includes("Ghost Protocol'a Giriş")) {
                         missionsText += `
 Görev Hikayesi:
@@ -576,7 +498,7 @@ Mevcut Para: $${this.money}
 İpucu: Komutları öğrenmek için 'help' komutunu kullan!
 `;
                     }
-
+                    
                     this.missionInfo = missionsText;
                     this.write(missionsText, 'mission');
                 } else {
@@ -655,7 +577,7 @@ Yükseltme yapmak için: upgrade [bileşen_adı]
             this.write('Hata: nmap komutu için en az Ağ seviye 2 gerekiyor.', 'error');
             return;
         }
-
+        
         this.write('Başlatılıyor SYN Taraması...');
         setTimeout(() => {
             this.write(`\nAçık portlar tespit edildi:\n- 22 (SSH) - Güvenlik duvarı korumalı\n- 80 (HTTP) - Web sunucusu aktif\n- 443 (HTTPS) - SSL sertifikası geçerli\n- 3306 (MySQL) - Veritabanı sunucusu\n\nGüvenlik Analizi:\n- Güvenlik duvarı: Aktif\n- IDS/IPS: Tespit edildi\n- SSL/TLS: Aktif\n- WAF: Tespit edilemedi\n            `, 'success');
@@ -704,13 +626,13 @@ Yükseltme yapmak için: upgrade [bileşen_adı]
             this.write('Hata: Hedef ve kullanıcı belirtilmedi.', 'error');
             return;
         }
-
+        
         this.write('Parola kırma işlemi başlatılıyor...');
         let attempts = 0;
         const interval = setInterval(() => {
             attempts++;
             this.write(`Deneme ${attempts}: password${attempts} ❌`);
-
+            
             if (attempts === 10) {
                 clearInterval(interval);
                 this.write('Parola başarıyla kırıldı: summer2025 ✅');
@@ -750,7 +672,7 @@ Yükseltme yapmak için: upgrade [bileşen_adı]
             this.write('Hata: Hedef ve uyarı mesajı belirtilmedi.', 'error');
             return;
         }
-
+        
         this.write('Yanlış alarm oluşturuluyor...');
         setTimeout(() => {
             this.write('CyberCore yetkilileri, uyarının hatalı olduğuna inanıp güvenlik önlemini durdurdu.');
@@ -830,7 +752,7 @@ Yükseltme yapmak için: upgrade [bileşen_adı]
             this.write('Hata: İşlem belirtilmedi.', 'error');
             return;
         }
-
+        
         this.write('Sıfır gün açığı taraması başlatılıyor...');
         setTimeout(() => {
             this.write(`
@@ -852,7 +774,7 @@ Risk Seviyesi: Kritik
             this.write('Hata: Hedef belirtilmedi.', 'error');
             return;
         }
-
+        
         this.write('Sosyal mühendislik saldırısı başlatılıyor...');
         setTimeout(() => {
             this.write(`
@@ -875,7 +797,7 @@ Erişim: Tam Yetki
             this.write('Hata: Cüzdan adresi belirtilmedi.', 'error');
             return;
         }
-
+        
         this.write('Kripto para transferleri takip ediliyor...');
         setTimeout(() => {
             this.write(`
@@ -898,7 +820,7 @@ Toplam Değer: 2.5 BTC
             this.write('Hata: Hedefler belirtilmedi.', 'error');
             return;
         }
-
+        
         this.write('Uluslararası hedef taraması başlatılıyor...');
         setTimeout(() => {
             this.write(`
@@ -928,7 +850,7 @@ Durum: Aktif
             this.write('Hata: İşlem belirtilmedi.', 'error');
             return;
         }
-
+        
         this.write('Final operasyonu başlatılıyor...');
         setTimeout(() => {
             this.write(`
@@ -1002,13 +924,13 @@ Kalan para: $${this.game.player.money}
             // Aktif görevin tüm adımlarını tamamla
             if (this.game && this.game.player.currentMission) {
                 const mission = this.game.player.currentMission;
-
+                
                 // Her adımı tamamlandı olarak işaretle
                 mission.steps.forEach(step => {
                     // Adımdan komut adını çıkar
                     const match = step.match(/([a-zA-Z0-9_\-]+)/);
-                    const command = match ? match[1].replace('--', '') : step;
-
+                    const command = match ? match[1].replace('--','') : step;
+                    
                     // Adımı tamamlandı olarak işaretle
                     if (!this.game.player.completedSteps.includes(step)) {
                         this.game.player.completedSteps.push(step);
@@ -1021,7 +943,7 @@ Kalan para: $${this.game.player.money}
                 if (this.game.missions.isMissionComplete(mission.id, this.game.player.completedSteps)) {
                     this.game.completeMission(mission.id);
                 }
-
+                
                 this.write('Tüm görev adımları admin tarafından tamamlandı.', 'success');
             } else {
                 this.write('Aktif görev yok.', 'warning');
@@ -1063,7 +985,7 @@ Kalan para: $${this.game.player.money}
 
         const text = args.join(' ');
         this.write('Şifreleme işlemi başlatılıyor...', 'info');
-
+        
         setTimeout(() => {
             this.write(`\nŞifreleme Raporu:\n----------------\nOrijinal Metin: ${text}\nŞifreleme Algoritması: AES-256\nŞifreleme Anahtarı: Otomatik oluşturuldu\nDurum: Başarılı\n\nŞifrelenmiş Veri:\n----------------\n${btoa(text)}.enc\n\nGüvenlik Seviyesi: Yüksek\n            `, 'success');
             if (this.game && this.game.player.currentMission) {
@@ -1233,7 +1155,7 @@ Kalan para: $${this.game.player.money}
         this.write(`🤝 Kamu Güveni: ${metrics.public_trust}`, 'info');
         this.write(`⚠️ İfşa Riski: ${metrics.exposure_risk}`, 'info');
         this.write(`⏱️ Zaman Baskısı: ${metrics.timing_pressure}`, 'info');
-
+        
         if (flags.length > 0) {
             this.write(`\n🔑 Kazanılan Anahtarlar:`, 'warning');
             flags.forEach(flag => {
@@ -1246,13 +1168,13 @@ Kalan para: $${this.game.player.money}
         this.write('\n💰 Para: $' + this.game.player.money, 'success');
         this.write('⭐ İtibar: ' + this.game.player.reputation, 'success');
         this.write('📈 Seviye: ' + this.game.player.level, 'success');
-
+        
         this.write('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n', 'info');
     }
 }
 
 // Hızlı komut butonları için global fonksiyon
-window.executeCommand = function (cmd) {
+window.executeCommand = function(cmd) {
     if (window.terminal) {
         window.terminal.input.value = cmd;
         // Enter tuşuna basılmış gibi davran

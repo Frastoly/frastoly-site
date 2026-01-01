@@ -1,398 +1,716 @@
-// missions.js - Ghost Protocol: Gölge Ağı - Derin Hikaye Sistemi
+// missions.js - Ghost Protocol: Kırılma Noktası - Derin Hikaye Sistemi
 
 class Missions {
     constructor() {
+        // Oyuncu başlangıç durumu takibi
+        this.playerPath = {
+            prologueChoice: null,  // 'hero', 'silent', 'thief'
+            faction: null,         // 'ghost_protocol', 'shadow_network', 'lone_wolf'
+            familyStatus: 'safe',  // 'safe', 'captured', 'rescued', 'lost'
+            reputation: 'neutral'  // 'hero', 'neutral', 'villain'
+        };
+
         // Bölüm tabanlı görev sistemi
         this.chapters = [
+            // ==================== PROLOGUE ====================
             {
-                id: 'chapter_1',
-                title: 'Bölüm 1: Kıvılcım - Ghost Protocol\'a Giriş',
-                briefing: `Rhea, tek kanallı bir hatta bağlanır:
-"Gözlerini, kulaklarını açık tut. Üç yolun var ve hepsi yanıyor: Sız, savun veya ifşa et. Ama ne yaparsan yap, iz bırakma."`,
-                story: `Ghost Protocol, dünyanın en tehlikeli siber tehditlerine karşı savaşan elit bir ekiptir. Sen de artık bu ekibin bir parçasısın. Bir dizi finans kuruluşunda görünmez bir kanama var: Gölge Ağı, parayı mikro kesintilerle Frastoly adlı sahte bir kabuk şirkete akıtıyor.`,
-                target: 'frastoly.com',
-                targetDescription: 'Şüpheli finansal işlemler tespit edilen bir kabuk şirket. Sistemlerini inceleyip güvenlik açıklarını tespit etmemiz gerekiyor.',
+                id: 'prologue',
+                title: 'PROLOGUE: Başlangıç',
+                briefing: `SİSTEM BAŞLATILIYOR... HOŞGELDİN, OPERATÖR.`,
+                story: `Karanlık bir bodrum. Üç monitör, sigara dumanı. Gündüzleri görünmez, geceleri efsanesin. 
+Forumlarda "Operatör" diyorlar. Küçük işler yapıyorsun. Ama bu gece her şey değişecek.
+
+BAKİYE: $12 (Kritik Düşük)
+YENİ MESAJ: Anonim Kullanıcı - ACİL
+
+TORUN: "Abi, dedem KrediX tuzağına düştü. $5.000 aldı, $15.000 borç yazdılar. Sahte senet. 
+Şimdi eve el koyacaklar. Mahallede 150 aile daha aynı durumda. Lütfen yardım et."
+
+"Cebimdeki son $200'ı vereyim. Dedemi bu listeden sil. Başka kimsemiz yok."
+
+$200... Ama bu sadece bir tefeci veritabanı değil. Arkasında daha büyük bir şey var.`,
+                target: 'kredix.local',
+                targetDescription: 'KrediX tefeci ağının veritabanı. İçeride 12.847 borç kaydı var.',
                 steps: [
-                    'skills komutunu kullan',
-                    'nmap frastoly.com komutunu kullan',
-                    'netstat komutunu kullan',
+                    'nmap kredix.local komutunu kullan',
+                    'bruteforce --target kredix komutunu kullan',
                     'logs --clear komutunu kullan'
                 ],
                 difficulty: 1,
-                reward: { xp: 50, money: 2000, reputation: 10 },
-                debriefing: 'Temel siber güvenlik yeteneklerini gösterdin. Frastoly\'deki mikro kesintiler daha büyük bir operasyonun parçası gibi görünüyor.',
+                reward: { xp: 50, money: 200, reputation: 5 },
+                debriefing: `SQL INJECTION BAŞARILI! VERİTABANI ERİŞİMİ SAĞLANDI.
+
+Dede'nin kaydı bulundu: $15.000 (SAHTE). Mahallede 147 aile daha aynı durumda.
+KRİTİK: Tefecinin kripto cüzdanı: $78.000
+
+Sistemin kalbindesin. Şimdi kritik bir karar vermelisin...`,
                 hasDecision: true,
-                decisionId: 'D0'
+                decisionId: 'D_PROLOGUE'
             },
+            // ==================== CHAPTER 2 ====================
             {
                 id: 'chapter_2',
-                title: 'Bölüm 2: İz Sürme - Gölge Ağı',
-                briefing: `Frastoly'deki mikro kesintiler aynı alt ağdan tetikleniyor. SunHarbor Limanı'nda geceleri "boş" görünen bir vinç hattı, konteynerleri aynı anda göçertiyor. Kürsör'ün forumda bıraktığı imza, seni davet eder gibi.`,
-                story: `Araştırmalarımız sırasında, daha büyük bir tehdidin izlerine rastladık. "Gölge Ağı" adlı bir hacker grubu, finansal kurumları hedef alıyor. Son 6 ayda 3 büyük banka saldırısından sorumlu görünüyorlar.`,
-                target: 'shadow-network.io',
-                targetDescription: 'Gölge Ağı\'nın komuta kontrol sunucusu. Bu sunucuya sızıp, planlarını öğrenmeliyiz.',
+                title: 'BÖLÜM 2: İki Teklif',
+                briefing: `6 AY SONRA...
+
+O geceden sonra hiçbir şey eskisi gibi olmadı. Adın yeraltında dolaşıyor: "Operatör". 
+İki büyük güç seni fark etti. İkisi de seni istiyor.`,
+                story: `İKİ YENİ MESAJ ALINDI:
+
+[ŞİFRELİ] - Devlet İmzası: Ghost Protocol
+[ANONİM] - Karanlık Ağ: Gölge Ağı
+
+İki farklı dünyadan iki teklif. Hayatını değiştirecek karar.`,
+                target: 'secure-channel.local',
+                targetDescription: 'Şifreli iletişim kanalları. Her iki tarafın tekliflerini incele.',
                 steps: [
-                    'nmap shadow-network.io komutunu kullan',
-                    'encrypt "Gölge Ağı Analiz Raporu" komutunu kullan',
-                    'mailspoof shadow-network.io komutunu kullan',
-                    'logs --clear komutunu kullan'
+                    'decrypt ghost_protocol komutunu kullan',
+                    'decrypt shadow_network komutunu kullan',
+                    'analyze --both komutunu kullan'
                 ],
                 difficulty: 2,
-                reward: { xp: 100, money: 5000, reputation: 20 },
-                debriefing: 'Gölge Ağı\'nın planları daha büyük. Liman trafiği ve finansal kesintiler aynı frekansta kıpırdıyor. Daha derine inmemiz gerekiyor.',
-                hasDecision: false
+                reward: { xp: 100, money: 3000, reputation: 10 },
+                debriefing: `RHEA (Ghost Protocol): "Merhaba Operatör. Ben Rhea. Ghost Protocol adına konuşuyorum. 
+Seni 6 aydır izliyoruz. O mahallede yaptığını gördük. Yasadışı mıydı? Evet. Ama adaletli miydi? Kesinlikle.
+Yeteneğin var. Bize katıl. Düzeni korumak için çalış. Yasal koruma, gelişmiş ekipman, düzenli maaş."
+
+ADMİN (Gölge Ağı): "Operatör... Ben Gölge Ağı'nın Admini. Biz bu dünyanın görünmeyen yöneticileriyiz. 
+Rhea sana kurallar ve tasma vaat ediyordur. Bize katıl. Kuralları birlikte yıkalım. 
+Sınırsız kaynak, en iyi silahlar, dünya çapında ağ. Para mı? Sınırsız. Güç mü? Sınırsız."
+
+Kararını ver. Ya da ikisini de reddet.`,
+                hasDecision: true,
+                decisionId: 'D_FACTION'
             },
+            // ==================== CHAPTER 3 ====================
             {
                 id: 'chapter_3',
-                title: 'Bölüm 3: Koridor - Derin Ağ',
-                briefing: `Derin forumlara bir persona ile sızarsan, Kürsör sana "Sıfır kayıp, sıfır iz" diyen bir manifesto okutuyor. Ayrı bir ses, sana gizli bir C2 (komuta-kontrol) kapısı fısıldıyor.`,
-                story: `Gölge Ağı\'nın izlerini takip ederken, derin ağda şüpheli bir forum keşfettik. Burada daha fazla bilgi olabilir. Ama dikkatli olmalısın - her adımında izini temizlemeyi unutma.`,
-                target: 'deep-forum.onion',
-                targetDescription: 'Şüpheli hacker forumu. Gölge Ağı üyeleri burada iletişim kuruyor olabilir.',
+                title: 'BÖLÜM 3: NetShield Tehdidi',
+                briefing: `2 HAFTA SONRA...
+
+UYARI: NetShield aktivitesi tespit edildi!
+NetShield... Devletin en acımasız siber birimi. Senin izini sürdükleri anlaşılıyor.`,
+                story: `NetShield seni tespit etti. 6 ay önceki mahalle olayından izler bulmuşlar.
+
+Durumun kritik. Seçtiğin tarafa göre farklı bir görev alacaksın:
+
+GHOST PROTOCOL: Ajan ECHO'yu kurtar (NetShield içindeki köstebek)
+GÖLGE AĞI: PHANTOM.exe ransomware'i NetShield'a yükle
+YALNIZ KURT: Kendi başına NetShield veritabanından kaydını sil`,
+                target: 'netshield.gov',
+                targetDescription: 'Devletin gölge siber birimi. Ultra güvenli sistemler.',
                 steps: [
-                    'nmap deep-forum.onion komutunu kullan',
-                    'encrypt "Forum Analiz Raporu" komutunu kullan',
-                    'mailspoof deep-forum.onion komutunu kullan',
+                    'nmap -sS -Pn netshield.gov komutunu kullan',
+                    'analyze --security komutunu kullan',
+                    'exploit --entry komutunu kullan',
                     'logs --clear komutunu kullan'
-                ],
-                difficulty: 3,
-                reward: { xp: 150, money: 8000, reputation: 30 },
-                debriefing: 'Forumdaki mesajlar, Gölge Ağı\'nın çok daha büyük bir planı olduğunu gösteriyor. Şimdi bir karar vermemiz gerekiyor.',
-                hasDecision: true,
-                decisionId: 'D1'
-            },
-            {
-                id: 'chapter_4',
-                title: 'Bölüm 4: Savunma Cephesi - NetShield',
-                briefing: `NetShield, güncelleme bekleyen bir kural seti ile kırılgan. Panik yaratmadan yamaları geçmek mi, yoksa paniği bilinçli olarak tırmandırıp Gölge Ağı\'nı dağıtmak mı?`,
-                story: `NetShield şirketi şüpheli aktiviteler bildiriyor. Sistemleri kırılgan ve bir saldırıya açık. Nasıl ilerleyeceğimiz kritik önemde.`,
-                target: 'netshield.local',
-                targetDescription: 'NetShield güvenlik sistemleri. Yamaları uygulayıp sistemi güçlendirmemiz veya başka bir yaklaşım benimsememiz gerekiyor.',
-                steps: [
-                    'nmap -sS -Pn netshield.local komutunu kullan',
-                    'netstat -tulpn komutunu kullan',
-                    'report create --target netshield.local komutunu kullan'
                 ],
                 difficulty: 4,
-                reward: { xp: 120, money: 6000, reputation: 25 },
-                debriefing: 'NetShield operasyonu tamamlandı. Ancak başka hatlar da var - TechNova ve FinTrust.',
+                reward: { xp: 150, money: 6000, reputation: 20 },
+                debriefing: `OPERASYON TAMAMLANDI!
+
+İzini kaybettirdin. Ama artık "Kırmızı Bülten" ile aranıyorsun. Oyun ciddileşti.`,
                 hasDecision: true,
-                decisionId: 'D2'
+                decisionId: 'D_APPROACH'
             },
+            // ==================== CHAPTER 4 ====================
             {
-                id: 'chapter_5',
-                title: 'Bölüm 5: İkincil Hatlar - TechNova & FinTrust',
-                briefing: `TechNova'nın prototip günlükleri, bir IoT sensör dizisinin belirli saatlerde "ölü-uyanık" döngüye geçtiğini göstermekte. FinTrust'ın zincir haritasında mikro kesintilerin liman vardiyalarıyla korele olduğu netleşiyor.`,
-                story: `İki kritik hedef: TechNova'nın AR-GE sistemleri ve FinTrust'ın finans zinciri. Her ikisi de Gölge Ağı'na istemeden açılım sağlıyor.`,
-                targets: ['technova.com', 'fintrust.com'],
-                targetDescription: 'TechNova prototip günlükleri ve FinTrust zincir haritası. İkisini de analiz etmemiz gerekiyor.',
+                id: 'chapter_4',
+                title: 'BÖLÜM 4: Aile Tehdidi',
+                briefing: `1 HAFTA SONRA...
+
+ACİL MESAJ ALINDI!
+Bir hafta oldu. Rahatladığını düşünüyordun. Ama fırtına yeni başlıyor.`,
+                story: `[ANONİM VIDEO AÇILIYOR...]
+
+Ekranda: Bağlı bir kadın.
+
+"Operatör. Rhea'nın arkasına saklanabileceğini sandın. Büyük hata. 
+Bu kadını tanıyor musun? Annen. 24 saat sonra ölü.
+Polise gidersen, ölür. Ghost Protocol'e söylersen, ölür. 
+Tek başına gel. Koordinatlar ekte."
+
+Ya da VİKTOR (Mafya Patronu):
+"Prolog'da sildiğin o borçlar vardı ya... Onların gerçek sahibi benim. 
+KrediX benim alt kuruluşumdu. Şimdi faiziyle ödeme zamanı.
+Yarın gece, liman deposu. Gel ve hesabını temizle."
+
+Ailen tehlikede. Ne yapacaksın?`,
+                target: 'rescue-operation',
+                targetDescription: 'Aile kurtarma operasyonu. Yüksek risk.',
                 steps: [
-                    'nmap technova.com komutunu kullan',
-                    'nmap fintrust.com komutunu kullan',
-                    'encrypt "TechNova-FinTrust Analiz" komutunu kullan',
-                    'logs --clear komutunu kullan'
+                    'analyze --location komutunu kullan',
+                    'plan --entry komutunu kullan',
+                    'execute --rescue komutunu kullan'
                 ],
                 difficulty: 5,
-                reward: { xp: 130, money: 7000, reputation: 30 },
-                debriefing: 'TechNova ve FinTrust verileri toplandı. Lojistik kesişim noktasını bulduk - SunHarbor Limanı.',
-                hasDecision: false
+                reward: { xp: 180, money: 0, reputation: 25 },
+                debriefing: `AİLE DURUMU GÜNCELLENDİ.
+
+Anneni kurtardın. Ama düşmanların seni bulmak için her şeyi yapacak.
+
+ANNE: "Oğlum... Bu insanlar kim? Ne yaptın sen?"
+
+Ona gerçeği söyledin mi yoksa yalan mı?`,
+                hasDecision: true,
+                decisionId: 'D_FAMILY'
             },
+            // ==================== CHAPTER 5 ====================
             {
-                id: 'chapter_6',
-                title: 'Bölüm 6: Lojistik Kesişim - SunHarbor',
-                briefing: `Kade, vinç operatörlerinin değişimli nöbetinde "boş sefer" maskesi altında konteyner kaydırma yapıldığını doğruluyor. Gölge Ağı, finans ve lojistiği aynı anahtarla döndürüyor.`,
-                story: `Liman manifestolarında tutarsızlıklar var. "Boş" konteynerler sahada yok görünüyor. Bu, Gölge Ağı'nın fiziksel ayağı olabilir.`,
-                target: 'sunharbor.port',
-                targetDescription: 'SunHarbor Limanı konteyner yönetim sistemi. Manifest kayıtlarını inceleyip tutarsızlıkları bulmamız gerekiyor.',
+                id: 'chapter_5',
+                title: 'BÖLÜM 5: NEXUS Sızma',
+                briefing: `2 HAFTA SONRA...
+
+KRİTİK SEVİYE OPERASYON!`,
+                story: `HEDEF: NEXUS VERİ MERKEZİ
+ÖNEMİ: KÜRESEL İNTERNETİN KALBİ
+GÜVENLİK: ULTRA YÜKSEK
+
+NEXUS... Dünyanın en büyük veri merkezi. Hükümet sırları, şirket verileri, kişisel bilgiler - her şey burada. 
+Hem Ghost Protocol hem Gölge Ağı bu verileri istiyor. Ve sen, "Truva Atı" olacaksın.
+
+Geçmişteki kararların burada etkili olacak:
+- KAHRAMAN: Mahalle sana yardım edecek (Kolay giriş)
+- SESSİZ: Orta zorluk
+- HIRSIZ: Kötü itibar yüzünden çok zor giriş`,
+                target: 'nexus.datacenter',
+                targetDescription: 'Dünyanın en büyük veri merkezi. Tüm sırlar burada.',
                 steps: [
-                    'nmap sunharbor.port komutunu kullan',
-                    'encrypt "SunHarbor Manifest Analizi" komutunu kullan',
-                    'bruteforce --target sunharbor --user operator komutunu kullan',
-                    'logs --clear komutunu kullan'
+                    'nmap -A nexus.datacenter komutunu kullan',
+                    'exploit --quantum komutunu kullan',
+                    'download --all komutunu kullan',
+                    'exfiltrate --secure komutunu kullan'
                 ],
                 difficulty: 6,
-                reward: { xp: 140, money: 8500, reputation: 35 },
-                debriefing: 'Liman verileri ele geçirildi. Artık tam resmi görüyoruz. Şimdi nasıl kapatacağımıza karar verme zamanı.',
+                reward: { xp: 200, money: 10000, reputation: 30 },
+                debriefing: `NEXUS OPERASYONU TAMAMLANDI.
+
+VERİ TABANLARI:
+- gov_secrets.db (Devlet sırları)
+- shadow_network.db (Gölge Ağı üye listesi)
+- financial_records.db (Finansal kayıtlar)
+- personal_data.db (Kişisel veriler)
+
+Her şey elinin altında. Dünyayı değiştirebilecek bilgiler.
+Kime vereceksin? Ya da kendine mi saklayacaksın?`,
                 hasDecision: true,
-                decisionId: 'D3'
+                decisionId: 'D_TREASON'
             },
+            // ==================== CHAPTER 6 (FINAL) ====================
             {
-                id: 'chapter_7',
-                title: 'Bölüm 7: Eşik - Muhbirlik mi, Kontrol mü?',
-                briefing: `Yeterli delil birikti. Ama nasıl kapatacağın asıl kararı belirleyecek: Tam ifşa mı, kısmi sızdırma mı, yoksa ağı içeriden kontrol mü?`,
-                story: `Elimizde tüm deliller var: Frastoly, Gölge Ağı C2, forum kayıtları, NetShield açıkları, TechNova-FinTrust bağlantıları ve SunHarbor manifestoları. Şimdi son hamleyi yapma zamanı.`,
-                target: 'operation-finale',
-                targetDescription: 'Final operasyonu planlaması. Stratejini belirle ve uygula.',
+                id: 'chapter_6',
+                title: 'BÖLÜM 6: ATLAS ile Yüzleşme',
+                briefing: `3 GÜN SONRA...
+
+TÜM SİSTEMLER KARANLIK
+BİLİNMEYEN KAYNAK: "ATLAS"`,
+                story: `[FİZİKSEL NOT - Kapının Altından]
+
+"Ekranların arkasındaki oyun bitti, Operatör. 
+Liman. Gece yarısı. Tek başına gel. 
+Gelmezsen, seni olduğun yerde bitiririz. Ve aileni de.
+- ATLAS"
+
+ATLAS... Yeraltının en tehlikeli figürü. Efsane mi gerçek mi kimse bilmiyor. 
+Ama şimdi seni bulan o.
+
+Terkedilmiş konteynerler. Sis. Uzakta tek bir lamba yanıyor. 
+Figür ışığa çıktı. Orta yaşlı bir adam. Pahalı takım elbise. Soğuk gözler.`,
+                target: 'atlas-confrontation',
+                targetDescription: 'ATLAS ile son yüzleşme. Geri dönüşü yok.',
                 steps: [
-                    'multi_target --scan komutunu kullan',
-                    'coordinate --attack komutunu kullan',
-                    'encrypt "Final Operasyon Raporu" komutunu kullan',
-                    'logs --clear komutunu kullan'
-                ],
-                difficulty: 7,
-                reward: { xp: 200, money: 15000, reputation: 50 },
-                debriefing: 'Operasyon hazırlıkları tamamlandı. Rhea son kez bağlanıyor...',
-                hasDecision: true,
-                decisionId: 'D4'
-            },
-            {
-                id: 'chapter_8',
-                title: 'Bölüm 8: Final Operasyonu - Eşgüdüm',
-                briefing: `Rhea son kez bağlanır: "Şu an planı kilitlemezsek, döngü yine başa saracak. Seçim senin."`,
-                story: `Son adım. Tüm sistemler hazır, tüm ekipler yerinde. Kararın, dünyanın geleceğini şekillendirecek.`,
-                target: 'ghost-protocol-finale',
-                targetDescription: 'Ghost Protocol Final Operasyonu. Tüm kararlarının sonucu şimdi ortaya çıkacak.',
-                steps: [
-                    'final_operation --start komutunu kullan',
-                    'coordinate --all komutunu kullan',
-                    'cleanup --all komutunu kullan'
+                    'analyze --atlas komutunu kullan',
+                    'prepare --final komutunu kullan',
+                    'confront --atlas komutunu kullan'
                 ],
                 difficulty: 8,
-                reward: { xp: 300, money: 25000, reputation: 100 },
-                debriefing: 'Operasyon tamamlandı. Hikayenin sonu, kararlarınla şekillenecek...',
-                hasDecision: false,
+                reward: { xp: 300, money: 25000, reputation: 50 },
+                debriefing: `ATLAS konuşuyor:
+
+"Operatör. Sonunda yüz yüzeyiz. Sen beni tanımıyorsun ama ben seni 6 aydır izliyorum.
+O mahalledeki ilk hackinden beri.
+
+Rhea düzeni koruduğunu sanıyor. Gölge Ağı kaos yarattığını sanıyor. 
+Ama gerçek şu ki... İkisini de BEN kurdum. 
+
+Ghost Protocol? Benim oyuncağım. 
+Gölge Ağı? Benim deneyi. 
+Hepsi bir laboratuvardı. Ve sen... Sen denklemi bozdun."
+
+Şimdi son kararı ver.`,
+                hasDecision: true,
+                decisionId: 'D_FINAL',
                 isFinal: true
             }
         ];
 
-        // Karar Noktaları (D0-D4)
+        // Karar Noktaları
         this.decisions = {
-            'D0': {
-                id: 'D0',
-                title: 'Başlangıç Stratejisi',
-                description: 'Operasyona nasıl başlayacaksın? Seçimin, tüm hikayeyi şekillendirecek.',
+            'D_PROLOGUE': {
+                id: 'D_PROLOGUE',
+                title: 'Kritik Karar: KrediX Veritabanı',
+                description: 'Sistemin kalbindesin. Dede\'nin kaydı ve 147 ailenin borcu önünde. Tefecinin $78.000\'lık kripto cüzdanı da erişilebilir. Ne yapacaksın?',
                 options: [
                     {
-                        id: 'S',
-                        text: 'Sızma/Taarruz Ekseni - Gölge Ağı\'na doğrudan sızmayı hedefle',
-                        effects: {
-                            intel_score: 2,
-                            exposure_risk: 1,
-                            strategy: 'offensive'
-                        },
-                        consequence: 'Saldırgan bir yaklaşım seçtin. Bu, hızlı sonuçlar getirebilir ama riskler de yüksek.'
-                    },
-                    {
-                        id: 'V',
-                        text: 'Savunma Ekseni - NetShield ile kurum tarafını güçlendir',
-                        effects: {
-                            public_trust: 1,
-                            intel_score: 1,
-                            strategy: 'defensive'
-                        },
-                        consequence: 'Savunma odaklı bir yaklaşım seçtin. Daha güvenli ama yavaş ilerleyeceksin.'
-                    },
-                    {
-                        id: 'İ',
-                        text: 'İfşa Ekseni - Delilleri toplayıp kamuya sızdırma rotasına gir',
-                        effects: {
-                            public_trust: 2,
-                            exposure_risk: 2,
-                            strategy: 'whistleblower'
-                        },
-                        consequence: 'Muhbirlik yolunu seçtin. Kamu güvenini kazanacaksın ama kendini de riske atacaksın.'
-                    }
-                ]
-            },
-            'D1': {
-                id: 'D1',
-                title: 'Derin Forum mu, C2 mi?',
-                description: 'Derin ağda iki yol var. Hangisini seçeceksin?',
-                options: [
-                    {
-                        id: 'F',
-                        text: 'Derin Forum Personası - Güven inşa et, deep_forum_key kazan',
-                        effects: {
-                            intel_score: 2,
-                            exposure_risk: 1,
-                            flags: ['deep_forum_key']
-                        },
-                        consequence: 'Forum personası oluşturdun. Kürsör\'ün güvenini kazanmaya başladın.'
-                    },
-                    {
-                        id: 'C',
-                        text: 'C2\'ye Sızma - Yönetim katmanına gizli kapı (c2_backdoor) dene',
-                        effects: {
-                            intel_score: 1,
-                            exposure_risk: 2,
-                            flags: ['c2_backdoor']
-                        },
-                        consequence: 'C2\'ye sızdın. Tehlikeli ama güçlü bir pozisyon kazandın.'
-                    }
-                ]
-            },
-            'D2': {
-                id: 'D2',
-                title: 'NetShield Kararı',
-                description: 'NetShield\'in güvenliğini nasıl ele alacaksın?',
-                options: [
-                    {
-                        id: 'Y',
-                        text: 'Güncel Yama ve İzolasyon - netshield_rule_dump elde et, sistemleri güçlendir',
-                        effects: {
-                            public_trust: 2,
-                            exposure_risk: -1,
-                            flags: ['netshield_rule_dump']
-                        },
-                        consequence: 'Sistemleri yamaladın. Güvenilir ve temkinli bir yaklaşım.'
-                    },
-                    {
-                        id: 'A',
-                        text: 'Yanlış Alarmı Tırmandır - Düşmanı dağıtmayı dene ama kaosu göze al',
-                        effects: {
-                            public_trust: -2,
-                            exposure_risk: 2,
-                            timing_pressure: 1
-                        },
-                        consequence: 'Kaos yarattın. Bu, Gölge Ağı\'nı dağıtabilir ama kontrol kaybı riski var.'
-                    },
-                    {
-                        id: 'M',
-                        text: 'Arka Kanal Mutabakat - Bazı kurumlarla gizlice anlaş, sessiz denge kur',
-                        effects: {
-                            intel_score: 1,
-                            exposure_risk: -1,
-                            flags: ['back_channel']
-                        },
-                        consequence: 'Gizli anlaşmalar yaptın. Kırılgan ama etkili bir denge kurdun.'
-                    }
-                ]
-            },
-            'D3': {
-                id: 'D3',
-                title: 'İfşa/Anlaşma/Manipülasyon',
-                description: 'Elinde tüm deliller var. Şimdi ne yapacaksın?',
-                options: [
-                    {
-                        id: 'T',
-                        text: 'Tam İfşa - Kamuya aç, her şeyi',
+                        id: 'HERO',
+                        text: '🦸 Kahraman - TÜM borç kayıtlarını sil, 150 aileyi kurtar',
                         effects: {
                             public_trust: 3,
-                            exposure_risk: 3,
-                            timing_pressure: 2
-                        },
-                        consequence: 'Her şeyi ifşa ettin. Kamu kahramanı olabilirsin ama hedef de oldun.'
-                    },
-                    {
-                        id: 'K',
-                        text: 'Kısmi İfşa + Pazarlık - Soruşturma birimleriyle kontrollü paylaşım',
-                        effects: {
-                            public_trust: 1,
-                            exposure_risk: 1,
-                            intel_score: 1
-                        },
-                        consequence: 'Kontrollü bir yaklaşım seçtin. Dengeli ve makul.'
-                    },
-                    {
-                        id: 'Vx',
-                        text: 'Veriyi Sat/Manipüle Et - Kürsör\'e ya da üçüncü tarafa pazarlık',
-                        effects: {
-                            intel_score: 1,
-                            public_trust: -3,
                             exposure_risk: 2,
-                            money: 10000
+                            intel_score: 1,
+                            reputation_type: 'hero',
+                            flags: ['hero_path', 'mahalle_saved']
                         },
-                        consequence: 'Karanlık tarafa geçtin. Para kazandın ama itibarını kaybettin.'
+                        consequence: `TÜM BORÇ KAYITLARI SİLİNDİ: 12.847 kayıt. YEDEKLER İMHA EDİLDİ.
+
+"MAHALLEDE MUCİZE! Yüzlerce ailenin borç kayıtları silindi! KrediX iflas etti!"
+"ABİ! SEN HARİKASIN! Tüm mahalle senin hakkında konuşuyor. Ama polis de arıyormuş..."
+
+Kahraman oldun. Ama büyük düşmanlar edindin.`
+                    },
+                    {
+                        id: 'SILENT',
+                        text: '🤫 Sessiz - Sadece dede\'nin kaydını sil ve çık',
+                        effects: {
+                            intel_score: 2,
+                            exposure_risk: 0,
+                            reputation_type: 'neutral',
+                            flags: ['silent_path']
+                        },
+                        consequence: `KAYIT SİLİNDİ. YEDEKLER TEMİZLENDİ.
+
+"Abi! Dedem aradı. Borç kayıtları gitmiş! İşte $200. Teşekkür ederim."
+
+Bir kişiyi kurtardın. Ama monitörde 147 aile daha kalmış.
+Küçük bir şöhret kazandın. Temiz ve sessiz.`
+                    },
+                    {
+                        id: 'THIEF',
+                        text: '💰 Hırsız - Dede\'nin kaydını sil VE tefecinin $2.000\'ını çal',
+                        effects: {
+                            money: 2000,
+                            exposure_risk: 2,
+                            public_trust: -2,
+                            reputation_type: 'thief',
+                            flags: ['thief_path', 'stole_money']
+                        },
+                        consequence: `KAYIT SİLİNDİ. KRİPTO CÜZDAN: $2.000 transfer edildi.
+
+Parayı aldın. Dedeyi kurtardın. Ama 147 aile hâlâ borçlu. Tefeci araştıracak.
+
+"Abi, dedem kurtuldu! Ama... başkaları hâlâ sıkıntıda. Sen yardım edemedin mi?"
+
+Yeraltında "Bencil hacker" damgası yedin.`
                     }
                 ]
             },
-            'D4': {
-                id: 'D4',
-                title: 'Son Hamle',
-                description: 'Rhea: "Şu an planı kilitlemezsek, döngü yine başa saracak. Seçim senin."',
+            'D_FACTION': {
+                id: 'D_FACTION',
+                title: 'Taraf Seçimi: Kim için çalışacaksın?',
+                description: 'Ghost Protocol düzeni koruyor, Gölge Ağı kaos yaratıyor. Ya da kimsenin piyonu olmayabilirsin.',
                 options: [
                     {
-                        id: 'E',
-                        text: 'Eşgüdümlü Kapatma - NetShield yamaları + forum/C2 + liman koordinasyonu',
+                        id: 'GP',
+                        text: '🛡️ Ghost Protocol - Yasadışı ama adaletli. Rhea\'ya katıl.',
                         effects: {
                             public_trust: 2,
-                            exposure_risk: -1,
-                            operation: 'shutdown'
+                            intel_score: 1,
+                            money: 3000,
+                            flags: ['faction_gp', 'legal_protection']
                         },
-                        consequence: 'Temiz bir kapatma operasyonu. Profesyonel ve etkili.'
+                        consequence: `"Doğru seçimi yaptın. Ghost Protocol ailesine hoş geldin."
+
+TARAF: GHOST PROTOCOL
+AVANTAJLAR: Yasal Koruma, Gelişmiş Ekipman, Aylık Maaş (+$3000), Devlet Veritabanı Erişimi
+
+"İlk görevini yakında alacaksın. NetShield diye bir birim var. Bizimle arası iyi değil. Dikkatli ol."`
                     },
                     {
-                        id: 'R',
-                        text: 'Ertele ve Derinleş - İçeriden kontrolü büyüt; büyük ama riskli kumar',
+                        id: 'SN',
+                        text: '🌑 Gölge Ağı - Kuralları yık. Admin\'e katıl.',
                         effects: {
                             intel_score: 2,
+                            exposure_risk: 1,
+                            money: 5000,
+                            flags: ['faction_sn', 'dark_resources']
+                        },
+                        consequence: `"Akıllıca. Gölge Ağı'na hoş geldin."
+
+TARAF: GÖLGE AĞI
+AVANTAJLAR: Sınırsız Kaynak, Karanlık Ağ Erişimi, Zero-Day Exploit Kütüphanesi, Küresel Hacker Ağı
+
+"İlk görevin yakında. Bize sadık kal. Ama unutma: İhanet affedilmez."`
+                    },
+                    {
+                        id: 'YK',
+                        text: '🐺 Yalnız Kurt - İkisini de reddet. Özgür kal.',
+                        effects: {
+                            exposure_risk: 2,
+                            intel_score: 1,
+                            public_trust: -1,
+                            flags: ['faction_yk', 'lone_wolf']
+                        },
+                        consequence: `İki mesajı da sildin. Kimsenin piyonu olmayacaksın.
+
+3 gün geçti...
+"Sessizliğini cevap olarak aldık. Taraf seçmiyorsun, o zaman herkesin düşmanısın."
+
+TARAF: YALNIZ KURT
+DURUM: Düşman: Ghost Protocol, Gölge Ağı
+AVANTAJ: Tam özgürlük, hiçbir kural yok. Ama kaynakların sınırlı.`
+                    }
+                ]
+            },
+            'D_APPROACH': {
+                id: 'D_APPROACH',
+                title: 'NetShield Operasyonu: Yaklaşım Stratejisi',
+                description: 'NetShield sistemine nasıl yaklaşacaksın? Her yolun riskleri ve ödülleri farklı.',
+                options: [
+                    {
+                        id: 'STEALTH',
+                        text: '👤 Gizli Sızma - Sessiz ve görünmez. İz bırakma.',
+                        effects: {
+                            intel_score: 2,
+                            exposure_risk: -1,
+                            flags: ['stealth_approach']
+                        },
+                        consequence: `GİZLİ MOD AKTİF...
+Güvenlik kameralarına erişiliyor... Tespit edilmeden ilerliyorsun...
+
+Başarılı! Hiçbir alarm çalmadı. Profesyonel bir iş.`
+                    },
+                    {
+                        id: 'LOUD',
+                        text: '💥 Gürültülü Saldırı - DDoS ile kaos yarat, odunu dağıt.',
+                        effects: {
+                            timing_pressure: 2,
                             exposure_risk: 2,
                             public_trust: -1,
-                            operation: 'infiltrate'
+                            flags: ['loud_approach']
                         },
-                        consequence: 'Güç oyununa girdin. Kontrol sende ama bedeli ağır olabilir.'
+                        consequence: `SALDIRI MODU AKTİF...
+DDoS saldırısı başlatılıyor... Güvenlik sistemleri bunalıyor...
+
+Kaos ortamı oluşturuldu. İçeri giriş penceresi: 3 dakika!
+Ama iz bıraktın. Seni arayacaklar.`
+                    },
+                    {
+                        id: 'SOCIAL',
+                        text: '🎭 Sosyal Mühendislik - İçeriden birini satın al.',
+                        effects: {
+                            money: -5000,
+                            intel_score: 1,
+                            flags: ['social_approach', 'has_inside_contact']
+                        },
+                        consequence: `HEDEF: David Chen
+BORÇ: $45.000 (Kumar)
+ZAFİYET: Maddi sıkıntı
+
+$5.000 teklif ettin. "Tamam. Yarın gece senin kaydını sileceğim. Ama sakın beni satma."
+
+Pahalıya patladı ama işe yaradı. Şimdilik güvendesin.`
+                    }
+                ]
+            },
+            'D_FAMILY': {
+                id: 'D_FAMILY',
+                title: 'Aile Kararı: Annenle Yüzleşme',
+                description: 'Anneni kurtardın. Şimdi soru soruyor: "Bu insanlar kim? Ne yaptın sen?"',
+                options: [
+                    {
+                        id: 'TRUTH',
+                        text: '💔 Gerçeği Söyle - Her şeyi anlat. Hacker olduğunu.',
+                        effects: {
+                            public_trust: 1,
+                            exposure_risk: 1,
+                            flags: ['told_truth']
+                        },
+                        consequence: `"Hacker mı? Suçlu musun sen?! Ben seni doktor, mühendis olsun diye büyütmedim mi?"
+
+Annenin hayal kırıklığı gözlerinden okunuyor. Ama en azından gerçeği biliyor.
+Güven zedelendi ama yalan yok.`
+                    },
+                    {
+                        id: 'LIE',
+                        text: '🎭 Yalan Söyle - "Yanlış anlaşılma, düzelteceğim."',
+                        effects: {
+                            public_trust: -1,
+                            intel_score: 1,
+                            flags: ['told_lie']
+                        },
+                        consequence: `"Tamam oğlum... Sana güveniyorum."
+
+Annene yalan söyledin. Onu korumak için. Ya da kendini?
+Bir gün gerçek ortaya çıkarsa, daha da acı olacak.`
+                    },
+                    {
+                        id: 'DISTANCE',
+                        text: '🚶 Uzak Dur - Aileni güvenli bir yere gönder ve uzaklaş.',
+                        effects: {
+                            exposure_risk: -1,
+                            public_trust: 0,
+                            flags: ['family_distanced']
+                        },
+                        consequence: `Aileni şehir dışında bir akrabaya gönderin.
+
+[AİLE - MESAJ] "Bir süre burada kalacağız. Dikkatli ol, oğlum."
+
+Onları koruyorsun ama yalnızlaşıyorsun. Bu savaş artık sadece senin.`
+                    }
+                ]
+            },
+            'D_TREASON': {
+                id: 'D_TREASON',
+                title: 'İhanet Kararı: Verileri Kime Vereceksin?',
+                description: 'NEXUS verileri elinde. Devlet sırları, Gölge Ağı üye listesi, finansal kayıtlar... Dünyayı değiştirebilirsin.',
+                options: [
+                    {
+                        id: 'LOYAL',
+                        text: '✅ Sadık Kal - Verileri kendi tarafına ver.',
+                        effects: {
+                            intel_score: 2,
+                            public_trust: 2,
+                            flags: ['stayed_loyal']
+                        },
+                        consequence: `Verileri kendi tarafına transfer ettin.
+
+GHOST PROTOCOL: "Mükemmel iş! Gölge Ağı'nın sonu geldi. Sen tarih yazdın."
+GÖLGE AĞI: "Bu verilerle devleti yıllarca rehin tutarız."
+YALNIZ KURT: "Artık güç sende. Kimseye bağlı değilsin."
+
+Sadakatini kanıtladın.`
+                    },
+                    {
+                        id: 'BETRAY',
+                        text: '🗡️ İhanet Et - Verileri karşı tarafa ver.',
+                        effects: {
+                            money: 20000,
+                            public_trust: -3,
+                            exposure_risk: 2,
+                            flags: ['betrayed_faction']
+                        },
+                        consequence: `Verileri düşmana transfer ettin.
+
+"Operatör? Sen bize bu bilgiyi mi veriyorsun? İnanamıyorum!"
+
+$20.000 kazandın. Ama eski tarafın seni asla affetmeyecek.
+İhanetçi damgası yedin.`
+                    },
+                    {
+                        id: 'KEEP',
+                        text: '👑 Kendine Sakla - Tüm verileri al. Güç sende olsun.',
+                        effects: {
+                            intel_score: 3,
+                            exposure_risk: 3,
+                            flags: ['kept_data', 'power_hungry']
+                        },
+                        consequence: `TÜM VERİLER KOPYALANIYOR... 4.7 TB veri indirildi.
+
+Dünyanın en tehlikeli bilgileri şimdi senin elinde. 
+Hükümetleri devir, şirketleri çökert, insanları rehin tut...
+
+DİKKAT: Bu hareket ATLAS'ın dikkatini çekti!`
+                    }
+                ]
+            },
+            'D_FINAL': {
+                id: 'D_FINAL',
+                title: 'Final Kararı: ATLAS ile Yüzleşme',
+                description: `ATLAS konuşuyor: "Ben 'Yeni Düzen' kuruyorum. Hükümetler, şirketler... hepsi yeniden yapılandırılacak. 
+Sağ kolum ol. Karşılığında: Sınırsız güç, para, koruma. Aileni sonsuza kadar güvende tutarım."`,
+                options: [
+                    {
+                        id: 'REFUSE',
+                        text: '⚔️ Reddet ve Savaş - ATLAS\'ı durdur, ne pahasına olursa olsun.',
+                        effects: {
+                            public_trust: 3,
+                            exposure_risk: 2,
+                            flags: ['fought_atlas', 'hero_ending']
+                        },
+                        consequence: `"Hayır. Ben senin gibi olmayacağım."
+
+Savaş başladı. Silahlar, yumruklar, kan. 
+Sonunda ATLAS yerde. Yenilmiş.
+
+"Seni... yanlış okumuşum. Sen gerçek bir kahramansın."
+
+Dünya kurtarıldı. Ama bedeli ağır oldu.`
+                    },
+                    {
+                        id: 'ACCEPT',
+                        text: '🤝 Kabul Et - ATLAS\'a katıl. Güç sende olsun.',
+                        effects: {
+                            intel_score: 3,
+                            public_trust: -4,
+                            flags: ['joined_atlas', 'dark_ending']
+                        },
+                        consequence: `ATLAS'ın elini sıktın.
+
+"Akıllı seçim. Birlikte dünyayı yeniden şekillendireceğiz."
+
+Sınırsız güç, sınırsız para. Ama ruhunu mu sattın?
+Artık gölgelerin efendisisin.`
+                    },
+                    {
+                        id: 'TRICK',
+                        text: '🎭 Kandır ve Yok Et - Kabul ediyormuş gibi yap, içeriden çökert.',
+                        effects: {
+                            intel_score: 2,
+                            public_trust: 1,
+                            timing_pressure: 2,
+                            flags: ['tricked_atlas', 'double_agent']
+                        },
+                        consequence: `ATLAS'ın elini sıktın. Gülümsedin. "Seninle çalışmak onur olur."
+
+1 HAFTA SONRA - ATLAS'IN KARARGAHI
+
+İçeriden bilgi topladın. Tüm ağını öğrendin.
+Ve sonra... arkana sakladığın silahı çektin.
+
+"Seni... yanlış okumuşum. Sen benden de betersin."
+
+ATLAS düştü. Ama sen mi kahraman oldun, yoksa canavarın yerine mi geçtin?`
+                    },
+                    {
+                        id: 'SACRIFICE',
+                        text: '💀 Kendini Feda Et - Her şeyi ifşa et, sonuçlarına katlan.',
+                        effects: {
+                            public_trust: 4,
+                            exposure_risk: 4,
+                            flags: ['sacrificed', 'whistleblower_ending']
+                        },
+                        consequence: `Tüm verileri kamuya açtın. ATLAS, Ghost Protocol, Gölge Ağı... her şey.
+
+Dünya sarsıldı. Reformlar hızlandı. Adaletsizlik gün yüzüne çıktı.
+
+Ama sen? Yeni bir isim, yeni bir uydu hattı. 
+Rhea son mesajını gönderdi: "Yolun doğruydu. Keşke bedeli daha küçük olsaydı."
+
+Sürgündeki kahramansın.`
                     }
                 ]
             }
         };
 
-        // 6 Farklı Son
+        // Çoklu Sonlar
         this.endings = {
-            'E1': {
-                id: 'E1',
-                title: 'Sistem Kurtarıldı (Kahraman Sonu)',
-                description: `Eşgüdümlü baskınla C2 kapatılır. TechNova yamaları, NetShield kuralları ve FinTrust haritası tek dosyada birleşir. SunHarbor'da "boş" konteynerler bulunur. 
+            'E_HERO': {
+                id: 'E_HERO',
+                title: '🦸 Kahraman Sonu: Sistem Kurtarıldı',
+                description: `ATLAS yenildi. Organize suç ağları çökertildi.
 
-Basın, "görünmez kayıp operasyonu"nu manşet yapar ama senin kimliğin sızmaz. 
+TechNova yamaları, NetShield kuralları, finansal kayıtlar - hepsi güvenli ellerde.
+Basın, "görünmez kayıp operasyonu"nu manşet yapar ama senin kimliğin sızmadı.
 
-Rhea sadece bir cümle bırakır: "Bunu asla yazmayacağız, ama doğru şey yapıldı."`,
-                epilogue: 'Ghost Protocol\'un sessiz kahramanı oldun. Kimliğin gizli, ama etkisi sonsuza kadar.',
+Rhea son kez bağlanır: "Bunu asla yazmayacağız, ama doğru şey yapıldı."
+
+Masum insanlar güvende. Aileni tekrar görebiliyorsun.
+Ve sen? Ghost Protocol'un efsanesi oldun.`,
+                epilogue: 'Sessiz kahramansın. Kimliğin gizli, ama etkisi sonsuza kadar yaşayacak.',
                 type: 'hero'
             },
-            'E2': {
-                id: 'E2',
-                title: 'Gölge Kralı (Kontrolü Ele Geçirdin)',
-                description: `C2'nin ritmini öğrendin; Gölge Ağı'nın damarlarına dokunmadan yönlendirmeye başlıyorsun. Mikro kesintiler "istenen" yerlere akıyor, bazıları geri akıyor. 
+            'E_POWER': {
+                id: 'E_POWER',
+                title: '👑 Karanlık Kral Sonu: Kontrolü Ele Geçirdin',
+                description: `ATLAS'ın yerine geçtin. Tüm sistemler şimdi senin kontrolünde.
 
-Bu güç bir karar: Dünyayı görünmez bir panelden iyileştirmek mi, yoksa zamanla panelin kendisi mi olmak?
+Ghost Protocol, Gölge Ağı, NEXUS verileri... hepsi senin oyuncağın.
+Mikro akışları yönlendiriyorsun. Kararlar sen veriyorsun.
 
-Rhea sessizce bağlantıyı keser. Artık tek başınasın.`,
-                epilogue: 'Görünmez kralsın. Gücün var ama yalnızsın.',
+Bu güç bir karar: Dünyayı görünmez bir panelden iyileştirmek mi, 
+yoksa zamanla panelin kendisi mi olmak?
+
+Rhea sessizce bağlantıyı kesti. Artık tek başınasın.`,
+                epilogue: 'Görünmez kralsın. Gücün var ama yalnızsın. Ve güç... yozlaştırır.',
                 type: 'power'
             },
-            'E3': {
-                id: 'E3',
-                title: 'Günah Keçisi (Yakalandın/İfşa Oldun)',
-                description: `Panik dalgası kurumları kilitlerken bir sızıntı, senin hamlelerini ters yüz eder. Medya seni "tekil fail"e indirger, Gölge Ağı sessizce maskesini değiştirir. 
+            'E_SACRIFICE': {
+                id: 'E_SACRIFICE',
+                title: '💀 Sürgündeki Muhbir Sonu',
+                description: `Sızdırdığın belgeler sistemi sarstı; reformlar hızlandı, kamu nefes aldı.
 
-Kade uzak bir limandan tek cümle gönderir: "Kaos her zaman birine bedel yazar."
+ATLAS yakalandı. Ghost Protocol yeniden yapılandırıldı. 
+Gölge Ağı tamamen çökertildi.
 
-Sen o birine döndün.`,
-                epilogue: 'Operasyon başarısız. Suçlu olarak anılacaksın.',
-                type: 'failure'
-            },
-            'E4': {
-                id: 'E4',
-                title: 'Sürgündeki Muhbir',
-                description: `Sızdırdığın belgeler sistemi sarsar; reformlar hızlanır, kamu nefes alır. Ama sen? 
+Ama sen? Yeni bir isim, yeni bir kimlik. Uzak bir kıyıda dalga sesleri.
 
-Yeni bir isim, yeni bir uydu hattı. Rhea, şifreli bir paket yollar: "Yolun doğruydu. Keşke bedeli daha küçük olsaydı." 
-
-Uzak bir kıyıda, dalga sesleri altında kimliğini kapatırsın.`,
-                epilogue: 'Dünyayı kurtardın ama kendini kaybettin.',
+Rhea şifreli bir paket yollar: 
+"Yolun doğruydu. Keşke bedeli daha küçük olsaydı."`,
+                epilogue: 'Dünyayı kurtardın ama kendini kaybettin. Gerçek fedakarlık buydu.',
                 type: 'sacrifice'
             },
-            'E5': {
-                id: 'E5',
-                title: 'Zincir Tepki (Kaos Sonu)',
-                description: `Yanlış alarmlar domino etkisi yapar: Piyasalar çalkalanır, masum kullanıcılar zarar görür. NetShield devreleri yorgun düşer; FinTrust geçici olarak askıya alınır. 
+            'E_CHAOS': {
+                id: 'E_CHAOS',
+                title: '🔥 Kaos Sonu: Zincir Tepki',
+                description: `Hataların domino etkisi yaptı.
 
-Gölge Ağı, sisin ardında bir istasyon daha kurar. 
+ATLAS kazandı. Sistemler çöktü. Masum kullanıcılar zarar gördü.
+Piyasalar çalkalandı. Aileler dağıldı.
 
-Kade'nin raporuna tek not düşer: "Yanlış zamanda doğru hamle, yine yanlıştır."`,
-                epilogue: 'Kaos yarattın. Sistem çöktü.',
+Ve sen? Ya hapsinde, ya kaçak, ya da daha kötüsü...
+
+ATLAS'ın son mesajı: "Seni uyarmıştım. Kaos her zaman birine bedel yazar."`,
+                epilogue: 'Yanlış zamanda doğru hamle, yine yanlıştır. Kaos yarattın.',
                 type: 'chaos'
             },
-            'E6': {
-                id: 'E6',
-                title: 'Kırılgan Denge (Gizli Mutabakat)',
-                description: `Kurumlar ile yeraltı kanalları arasında görünmez bir denge kurulur. Kimse tam kazanmadı ama kimse tam kaybetmedi. 
+            'E_BALANCE': {
+                id: 'E_BALANCE',
+                title: '⚖️ Kırılgan Denge Sonu: Gizli Mutabakat',
+                description: `Kurumlar ile yeraltı kanalları arasında görünmez bir denge kuruldu.
 
-Mikro akışlar kesilir, liman akışı normale döner. Senin adın dosyalara hiç yazılmaz. 
+Kimse tam kazanmadı ama kimse tam kaybetmedi.
+ATLAS geri çekildi - şimdilik. Ghost Protocol sessizleşti. Gölge Ağı yeniden organize oldu.
+
+Senin adın dosyalara hiç yazılmadı.
 
 Rhea fısıldar: "Savaş bitmedi; sadece sessizleşti."`,
-                epilogue: 'Belirsiz bir barış. Kimse kazanmadı, kimse kaybetmedi.',
+                epilogue: 'Belirsiz bir barış. Herkes bekliyor. Ve sen ortada, dengede...',
                 type: 'balance'
+            },
+            'E_BETRAYER': {
+                id: 'E_BETRAYER',
+                title: '🗡️ Hain Sonu: Günahların Bedeli',
+                description: `Herkese ihanet ettin. Ve sonunda yalnız kaldın.
+
+Ghost Protocol seni düşman ilan etti. 
+Gölge Ağı intikam peşinde.
+ATLAS'ı kandırdın ama artık herkes seni arıyor.
+
+Para mı? Var. Güç mü? Belki. Ama güvenebileceğin kimse yok.
+
+Medya seni "tekil fail"e indirger. Günah keçisi oldun.`,
+                epilogue: 'İhanet eden, ihanete uğrar. Yalnızlık senin sonun oldu.',
+                type: 'betrayer'
+            },
+            'E_LONE_WOLF': {
+                id: 'E_LONE_WOLF',
+                title: '🐺 Yalnız Kurt Sonu: Kendi Yolun',
+                description: `Kimsenin piyonu olmadın. Her iki tarafı da reddettin.
+
+Ghost Protocol ve Gölge Ağı birbirleriyle savaşırken, sen gölgelerde kaldın.
+ATLAS'ı deşifre ettin ama kimseyle paylaşmadın - sadece izledin.
+
+Şimdi özgürsün. Gerçek anlamda özgür. 
+Ama bu özgürlüğün bedeli yalnızlık.
+
+Rhea'nın son mesajı: "Bazıları kurtarır, bazıları yıkar. Sen sadece gözlemledin."`,
+                epilogue: 'Özgürlük mü yalnızlık mı? Belki ikisi de aynı şey.',
+                type: 'lone_wolf'
+            },
+            'E_REDEEMED': {
+                id: 'E_REDEEMED',
+                title: '🌅 Kefaret Sonu: İkinci Şans',
+                description: `Hırsız olarak başladın. Kahraman olarak bitirdin.
+
+O mahallede parayı çaldığında bencildin. Ama her adımda değiştin.
+ATLAS'a karşı savaşırken, eski günahlarını temizledin.
+
+Torun sana yazıyor: "Abi, dedem öldü geçen hafta. Ama son nefesine kadar 
+seni anlattı. 'O çocuk bizi kurtardı' dedi. Teşekkür ederim."
+
+Geçmişini değiştiremezsin. Ama geleceği yazabilirsin.`,
+                epilogue: 'Herkes ikinci bir şansı hak eder. Sen de.',
+                type: 'redeemed'
             }
         };
     }
@@ -423,7 +741,7 @@ Rhea fısıldar: "Savaş bitmedi; sadece sessizleşti."`,
     isChapterComplete(chapterId, completedSteps) {
         const chapter = this.getChapter(chapterId);
         if (!chapter) return false;
-        
+
         return chapter.steps.every(step => completedSteps.includes(step));
     }
 
@@ -438,7 +756,7 @@ Rhea fısıldar: "Savaş bitmedi; sadece sessizleşti."`,
         return this.isChapterComplete(id, completedSteps);
     }
 
-    // Final hesaplama - 6 farklı sonu belirler
+    // Final hesaplama - 8 farklı sonu dinamik hesaplar
     calculateEnding(playerState) {
         const {
             intel_score = 0,
@@ -449,66 +767,61 @@ Rhea fısıldar: "Savaş bitmedi; sadece sessizleşti."`,
             decisionHistory = []
         } = playerState;
 
-        // E1: Sistem Kurtarıldı (Kahraman)
-        if (intel_score >= 5 && public_trust >= 3 && exposure_risk <= 3) {
-            const lastDecision = decisionHistory.find(d => d.decisionId === 'D4');
-            if (lastDecision && lastDecision.selectedOption === 'E') {
-                return this.endings.E1;
+        // Kararları bul
+        const finalDecision = decisionHistory.find(d => d.decisionId === 'D_FINAL');
+        const treasonDecision = decisionHistory.find(d => d.decisionId === 'D_TREASON');
+        const prologueDecision = decisionHistory.find(d => d.decisionId === 'D_PROLOGUE');
+        const factionDecision = decisionHistory.find(d => d.decisionId === 'D_FACTION');
+
+        // E_SACRIFICE: Sürgün Sonu (öncelikli kontrol)
+        if (finalDecision && finalDecision.selectedOption === 'SACRIFICE') {
+            return this.endings.E_SACRIFICE;
+        }
+
+        // E_POWER: Karanlık Kral (ATLAS'a katıldıysan)
+        if (finalDecision && finalDecision.selectedOption === 'ACCEPT') {
+            return this.endings.E_POWER;
+        }
+
+        // E_REDEEMED: Kefaret Sonu (Hırsız başlayıp, kahraman bitirdiysen)
+        if (prologueDecision && prologueDecision.selectedOption === 'THIEF') {
+            if (finalDecision && (finalDecision.selectedOption === 'REFUSE' || finalDecision.selectedOption === 'TRICK')) {
+                if (public_trust >= 0) {
+                    return this.endings.E_REDEEMED;
+                }
             }
         }
 
-        // E2: Gölge Kralı (Kontrol)
-        if (intel_score >= 7 && flags.includes('c2_backdoor')) {
-            const d4Decision = decisionHistory.find(d => d.decisionId === 'D4');
-            if (d4Decision && d4Decision.selectedOption === 'R') {
-                return this.endings.E2;
+        // E_HERO: Kahraman Sonu (ATLAS'ı yendiysen ve güvenilirsen)
+        if (finalDecision && (finalDecision.selectedOption === 'REFUSE' || finalDecision.selectedOption === 'TRICK')) {
+            if (public_trust >= 2 && !flags.includes('betrayed_faction')) {
+                return this.endings.E_HERO;
             }
         }
 
-        // E3: Günah Keçisi (Başarısızlık)
-        if (exposure_risk >= 4 || public_trust <= 0) {
-            const d2Decision = decisionHistory.find(d => d.decisionId === 'D2');
-            if (d2Decision && d2Decision.selectedOption === 'A') {
-                return this.endings.E3;
+        // E_LONE_WOLF: Yalnız Kurt Sonu (Hiçbir tarafa katılmadıysan)
+        if (factionDecision && factionDecision.selectedOption === 'YK') {
+            if (!flags.includes('betrayed_faction') && intel_score >= 3) {
+                return this.endings.E_LONE_WOLF;
             }
         }
 
-        // E4: Sürgündeki Muhbir
-        if (public_trust >= 5 && exposure_risk >= 4) {
-            const d3Decision = decisionHistory.find(d => d.decisionId === 'D3');
-            const d4Decision = decisionHistory.find(d => d.decisionId === 'D4');
-            if (d3Decision && d3Decision.selectedOption === 'T' && 
-                d4Decision && d4Decision.selectedOption === 'E') {
-                return this.endings.E4;
+        // E_BETRAYER: Hain Sonu (İhanet ettiysen)
+        if (flags.includes('betrayed_faction') || public_trust <= -3) {
+            return this.endings.E_BETRAYER;
+        }
+
+        // E_CHAOS: Kaos Sonu (Çok fazla risk aldıysan)
+        if (exposure_risk >= 4 || timing_pressure >= 3) {
+            if (public_trust <= 0) {
+                return this.endings.E_CHAOS;
             }
         }
 
-        // E5: Zincir Tepki (Kaos)
-        if (timing_pressure >= 2 || public_trust <= 1) {
-            const d2Decision = decisionHistory.find(d => d.decisionId === 'D2');
-            if (d2Decision && d2Decision.selectedOption === 'A') {
-                return this.endings.E5;
-            }
-        }
-
-        // E6: Kırılgan Denge
-        if (public_trust >= 0 && public_trust <= 4 && 
-            exposure_risk <= 2 && flags.includes('back_channel')) {
-            const d2Decision = decisionHistory.find(d => d.decisionId === 'D2');
-            const d3Decision = decisionHistory.find(d => d.decisionId === 'D3');
-            const d4Decision = decisionHistory.find(d => d.decisionId === 'D4');
-            if (d2Decision && d2Decision.selectedOption === 'M' &&
-                d3Decision && d3Decision.selectedOption === 'K' &&
-                d4Decision && d4Decision.selectedOption === 'E') {
-                return this.endings.E6;
-            }
-        }
-
-        // Varsayılan son (E6 - Denge)
-        return this.endings.E6;
+        // E_BALANCE: Denge Sonu (Varsayılan - orta yol)
+        return this.endings.E_BALANCE;
     }
 }
 
+// Global instance
 const missions = new Missions();
-
-
